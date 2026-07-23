@@ -265,7 +265,7 @@ In addition, if any file is found to have issues in the format, the script will 
 
 Check all the output for read flags.
 
-Note: this script should work with *[R1|r1].[fastq|fq].gz and *[R2|r2].[fastq|fq].gz file extensions. Other extensions will need modification.
+Note: this script should work with *[_|.][R1|r1].[fastq|fq].gz and *[_|.][R2|r2].[fastq|fq].gz file extensions. Other extensions will need modification.
 
 ---
 
@@ -281,23 +281,22 @@ The following script checks for primer dimers and other short-read articats base
 ```
 RAMeN/bin/check_dimers.sh 
 ```
-For example,  some sequencing facilities might use the Nextera adapter `(CTGTCTCTTAT)`. The `check_dimers.sh` script identifies primer dimers by scanning raw sequencing reads for the premature appearance of adapter sequences. 
-For instance, in a standard MiFish metabarcoding run, a valid read should consist of a ~44 bp leader sequence (sequencing forward primer), 
-followed by the biological insert (the target 12S rRNA gene, typically ~163–185 bp), and finally the downstream Nextera adapter. 
-However, primer dimers occur when the Forward and Reverse primers anneal to each other instead of the target DNA, 
-creating a very short "empty" insert of only ~39 bp (the length of the reverse primer). 
-Because the read length (250 bp) far exceeds this short artifact, the sequencer reads through the leader, 
-the short dimer "insert," and immediately into the adapter sequence starting around base position 83. 
-The script detects this by flagging any read where the Nextera adapter sequence (`CTGTCTCTTAT`) appears within the first 100 base pairs, 
-allowing for rapid quantification of failed reactions across large datasets. 
+For instance, in a standard COI metabarcoding run, a valid read should consist of a ~40-50 bp leader sequence (sequencing forward primer/overhangs), followed by the biological insert (the target COI gene, typically ~300–315 bp). Because this total length (~340–365 bp) exceeds standard MiSeq read lengths (e.g., 250 bp or 300 bp), the sequencer will stop reading before it ever reaches the downstream adapter on a valid target.
+However, primer dimers occur when the Forward and Reverse primers anneal to each other instead of the target DNA, creating a very short "empty" insert consisting only of the reverse primer (typically ~35–45 bp, depending on the exact COI primers used). Because this artifact is very short, the sequencer reads through the leader, the short dimer "insert," and immediately into the adapter sequence starting around base position 80–90.
+The script detects this by flagging any read where the  adapter sequence (for example “CTGTCTCTTAT”) appears within the first 100 base pairs, allowing for rapid quantification of failed reactions across large datasets.
 
 Checking for these artifacts can explain large loss of data in QC steps of metabarcoding pipelines.
 
 **Check for Sequence Artifacts**
 
+Copy this script in your scripts dir:
+```
+cp RAMeN/bin/check_fastq.sh home_dir/scripts
+```
+
 From your data subdir, execute the script with
 ```
-srun bash RAMeN/bin/check_dimers.sh CTGTCTCTTAT
+bash ../scripts/check_dimers.sh CTGTCTCTTAT
 ```
 *The script can be used with any other adapter or motif. Modify the adapter/motif as needed. Skip this part if the adapter is not known*
 
