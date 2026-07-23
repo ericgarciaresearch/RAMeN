@@ -90,9 +90,11 @@ The execution of rainbow_bridge requires `Nextflow` a containerized environment 
 
 We recommend giving every project a separate GitHub repository that can be treated a stand alone product. For example, for multi-marker projects, set up a separate repo for each marker and then an additional repo for the multi-marker analyses that will combine them.
 
+* Create a GitHub repo or *home_dir* for your project
+
 **Project Info**
 
-Create a `project_info.tsv` file to populate metadata in subsequent reports.
+Create a `project_info.tsv` file at the base of your project to populate metadata in subsequent reports.
 
 Below is example project metadata that can be reported in your project but feel free to add or remove info as needed.
 
@@ -132,17 +134,17 @@ Rename your files to something managable as downstream analysis will use the nam
 
 For example, a sequencing facility might provide a naming scheme for data files that looks like:
 ```
-JV190_16SDegenerate_clientsname_S045173.1.R1.fastq.gz
+JV216.2_UniCOI_username_S041036.1.R1.fastq.gz
 ```
-Where the `S045173` is the actual sample name, the `.1` after that represent a replicate, the `R1` represent foward reads, and the rest is information not needed for processing. 
+Where the `S041036` is the actual sample name, the `.1` after that represents the replicate, the `R1` represent foward reads, and the rest is information not needed for processing. 
 
-In this case, all relevant information can be included within a short name as "S045173.1.R1.fastq.gz"
+In this case, all relevant information can be included within a short name as "S041036.1.R1.fastq.gz"
 
 **Metadata**
 
 If you have any metadata, this is a good time to extract that info.
 
-Create the file `sample_site_rep.tsv` with sample as the first column, stie (or other grouping metadata), and replicate (number of file withing the previous grouping)
+Create the file `sample_site_rep.tsv` with sample as the first column, site (or other grouping metadata), and replicate (number of file withing the previous grouping)
 
 Example:
 ```
@@ -210,9 +212,17 @@ D) Creates Read summaries
 * Summary of read numbers
 * Summary of read lengths.
 
-execute with
+Create a scripts subdir and copy `check_fastq.sh` there. From `home_dir`:
 ```
-bash RAMeN/bin/check_fastq.sh <path_to_data_files>
+mkdir scripts
+cp RAMeN/bin/check_fastq.sh scripts
+```
+
+Navigate to your data subdir and execute with
+```
+cd data
+# bash RAMeN/bin/check_fastq.sh <path_to_data_files>
+bash ../scripts/check_fastq.sh "."
 ```
 
 You will see a summary of the results printed straight in the standard output, stdout, that looks like this (example using 4 files):
@@ -239,11 +249,14 @@ You will see a summary of the results printed straight in the standard output, s
 🔢 Total Pairs Checked: 2
 🎉 All paired FASTQ files look properly matched and formatted.
 
-🧪 Generating raw read counts (file, read_count)
+🧪 Generating raw read counts and length analyses
 -----------------------------------------------
+
 📄 Read counts written to: fq_format_check_logs/raw_read_count.tsv
 
 📄 Read length summary written to: fq_format_check_logs/raw_read_length_summary.tsv
+
+📄 all output can be found in the subdirectory fq_format_check_logs
 ```
 
 All the output of the check script is saved into the subdir `fq_format_check_logs`, including lists of "good" and "bad" files, logs of file properties, a read count of both paired-end files in `paired_end_check.log`, and a summary of the counts as well as read lenghts.
