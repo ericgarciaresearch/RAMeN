@@ -522,7 +522,7 @@ RAMeN/bin/rename_fastqs.sh
 ```
 This script renames fastq files such as:
 ```
-JV190_16SDegenerate_username_S045173.1.R1.fastq.gz  ->  S045173_1.R1.fastq.gz
+JV190_16SDegenerate_clientsname_S045173.1.R1.fastq.gz  ->  S045173_1.R1.fastq.gz
 ```
  
 If you have the same naming convention as above, you might use `rename_fastq.sh`:
