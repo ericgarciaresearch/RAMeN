@@ -458,7 +458,7 @@ Perfect!!! Now you have a custom database ready for your analyses.
 <details><summary>Create Supporting Files (barcode, sample_map, and params.yml files)</summary>
 <p>
 
-See the [`rainbow_bridge`documentation](https://github.com/mhoban/rainbow_bridge) for details
+See the [rainbow_bridge documentation](https://github.com/mhoban/rainbow_bridge) for details
 
 &nbsp;
 &nbsp;
@@ -471,57 +471,31 @@ The barcode file is used by `rainbow_bridge`to strip barcodes and primer sequenc
 
 Non- and demultiplexed brief examples:
 
-* Non-demultiplexed runs: This format includes forward/reverse sample barcodes and forward/reverse PCR primers to separate sequences into the appropriate samples. Barcodes are separated with a colon and combined in a single column while primers are given in separate columns. For example:
+* Non-demultiplexed runs: This format includes forward/reverse sample barcodes and forward/reverse PCR primers to separate sequences into the appropriate samples (one line per sample with unique combinations of barcodes). Barcodes are separated with a colon and combined in a single column while primers are given in separate columns. For example:
 
 unmuxed_barcode.tsv
 
 | #assay | sample | barcodes | forward_primer | reverse_primer | extra_information |
 |---|---|---|---|---|---|
-|16S-Fish | B001 | GTGTGACA:AGCTTGAC | CGCTGTTATCCCTADRGTAACT | GACCCTATGGAGCTTTAGAC | EFMSRun103_Elib90
-|16S-Fish | B002 | GTGTGACA:GACAACAC | CGCTGTTATCCCTADRGTAACT | GACCCTATGGAGCTTTAGAC | EFMSRun103_Elib90
+| COI | B001 | GTGTGACA:AGCTTGAC | GACCCTATGGAGCTTTAGAC | CGCTGTTATCCCTADRGTAACT | confirmed in JVB1836-16SDegenerate-testmethods.txt |
+| COI | B002 | GTGTGACA:GACAACAC | GACCCTATGGAGCTTTAGAC | CGCTGTTATCCCTADRGTAACT | confirmed in JVB1836-16SDegenerate-testmethods.txt |
 
-* Demultiplexed runs: Since sequences have already been separated into samples, this format omits the barcodes (using just a colon, ':' in their place) but includes the primers. For example:
+* Demultiplexed runs: Since sequences have already been separated into samples, the demuxed format omits the barcodes (using just a colon, ':' in their place) but includes the primers. For example:
 
 demuxed_barcode.tsv
 
 | #assay |  sample |  barcodes | forward_primer |  reverse_primer | extra_information |
 | --- | --- | --- | --- | --- | --- |
-| COI | S040713_1 | : | GACCCTATGGAGCTTTAGAC | CGCTGTTATCCCTADRGTAACT |  confirmed in JVB1836-16SDegenerate-testmethods.txt|
-
-
-&nbsp;
-&nbsp;
-
-### PIFSC Primers
-
-To make this file I need the forward and reverse sequences of the primer that was used. For PIFSC data, we stored this information in the file:
-```
-/home/egarcia/data/pifsc_eDNA_data/pifsc_Metabarcoding_Primers.tsv
-```
-
-In this case, I am calling my barcode file `demuxed_barcodes.tsv` because my samples are already demultiplexed. This file then looks like this:
-
-| #assay |  sample |  barcodes | forward_primer |  reverse_primer | extra_information |
-| --- | --- | --- | --- | --- | --- |
-| COI | S040713_1 | : | GACCCTATGGAGCTTTAGAC | CGCTGTTATCCCTADRGTAACT |  confirmed in JVB1836-16SDegenerate-testmethods.txt|
-
-Where the header line has to start with #, "S040713_1" is the name of a random sample, and ":" is the 
-character that must separate the barcodes use to idenfity samples. Since my samples are already 
-demultiplex I need only ":". If you don't have demultiplexed samples, your barcode file needs 
-one line per sample with unique combinations of barcodes. See `rainbow_bridge`documentation for more details.
-
-You can copy the block below and just change the content for future runs/primers (but make sure you maintain a tsv format). You can also copy the file in SEDNA
-```
-#assay	sample	barcodes	forward_primer	 reverse_primer	extra_information
-COI	S040713_1	:	GACCCTATGGAGCTTTAGAC	CGCTGTTATCCCTADRGTAACT	confirmed in JVB1836-16SDegenerate-testmethods.txt
-```
+| COI | S040713_1 | : | GACCCTATGGAGCTTTAGAC | CGCTGTTATCCCTADRGTAACT |  confirmed in JVB1836-16SDegenerate-testmethods.txt |
 
 &nbsp;
 &nbsp;
 
-***Make a sample.map file***
+***Making a sample.map file***
 
-A `sample.map` file is only needed if you want `rainbow_bridge` to midify the file names. In this case I am using an in-house script to rename files so I don't need a sample map. If you do need to make one then a `sample.map` is a simple text file with the 3 columns: the base name, name of the forward, and reverse files.
+A `sample.map` file is only needed if you want `rainbow_bridge` to midify the file names. 
+
+`sample.map` is a simple text file with the 3 columns: the desired name, name of the forward, and reverse files.
 
 Thus, for file names such as:
 ```
@@ -531,33 +505,35 @@ JV183.1_MiFishU_clientsname_S040846.1.R1.fastq.gz
 JV183.1_MiFishU_clientsname_S040846.1.R2.fastq.gz
 JV183.1_MiFishU_clientsname_S040853.1.R1.fastq.gz
 JV183.1_MiFishU_clientsname_S040853.1.R2.fastq.gz
-JV183.1_MiFishU_clientsname_S040854.1.R1.fastq.gz
-JV183.1_MiFishU_clientsname_S040854.1.R2.fastq.gz
 ...
 ```
 
-The sample file can be created with the following commands:
+The `sample.map` files would looks like this:
 ```
-cd projects/MiFishU-test/data/					#navigate into your data dir
-ls *gz | sed 's/\.R[12].fastq.gz//' | sort | uniq > basenames	#get the base names
-ls *R1.fastq.gz > R1names					#get the forward names
-ls *R2.fastq.gz > R2names					#get the reverse names
-paste basenames R1names R2names > sample.map			#puts all of them together
-```
-
-Inspect your `sample.map` files and make sure it looks ok. Mine looks like this:
-```
-JV183.1_MiFishU_clientsname_S040845.1       JV183.1_MiFishU_clientsname_S040845.1.R1.fastq.gz   JV183.1_MiFishU_clientsname_S040845.1.R2.fastq.gz
-JV183.1_MiFishU_clientsname_S040846.1       JV183.1_MiFishU_clientsname_S040846.1.R1.fastq.gz   JV183.1_MiFishU_clientsname_S040846.1.R2.fastq.gz
-JV183.1_MiFishU_clientsname_S040853.1       JV183.1_MiFishU_clientsname_S040853.1.R1.fastq.gz   JV183.1_MiFishU_clientsname_S040853.1.R2.fastq.gz
-JV183.1_MiFishU_clientsname_S040854.1       JV183.1_MiFishU_clientsname_S040854.1.R1.fastq.gz   JV183.1_MiFishU_clientsname_S040854.1.R2.fastq.gz
+S040845.1	JV183.1_MiFishU_clientsname_S040845.1_R1.fastq.gz	JV183.1_MiFishU_clientsname_S040845.1_R2.fastq.gz
+S040846.1	JV183.1_MiFishU_clientsname_S040846.1_R1.fastq.gz	JV183.1_MiFishU_clientsname_S040846.1_R2.fastq.gz
+S040853.1	JV183.1_MiFishU_clientsname_S040853.1_R1.fastq.gz	JV183.1_MiFishU_clientsname_S040853.1_R2.fastq.gz
 ...
 ```
 
-Once you're satisfied, delete the intermediate files
+RAMen uses data files from Jonah Venture sequencing facility for proof of concept. Therefore, we have included a custom script that manually renames files
 ```
-rm basenames R1names R2names
+RAMeN/bin/rename_fastqs.sh
 ```
+This script renames fastq files such as:
+```
+JV190_16SDegenerate_username_S045173.1.R1.fastq.gz  ->  S045173_1.R1.fastq.gz
+```
+ 
+If you have the same naming convention as above, you might use `rename_fastq.sh`:
+```
+# cd into file directory and first do a dry run:
+bash RAMeN/bin/rename_fastqs.sh --dry-run
+
+#if renaming looks good, then
+bash RAMeN/bin/rename_fastqs.sh --rename
+```
+
 
 &nbsp;
 &nbsp;
