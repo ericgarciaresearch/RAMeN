@@ -319,22 +319,22 @@ RAMeN requires a preformatted reference database such as [NCBI](https://www.ncbi
 
 No reference database is perfect. Results may be influenced by inherent global data gaps, such as the underrepresentation of rare species, research bias toward economically important taxa, and misannotations in the source records. MIDORI2 is a set of publicly accessable, mitochondrial marker or amino acid curated databases (from NCBI GenBank) that mitigate some of these issues. We recommend utilizing MIDORI2 when possible.
 
-We prefer the "sp" "UNIQ" nucleotype database which include sequences that lack species-level assignments ("sp.") and all unique haplotypes associated with each species as well ("UNIQ" portion). RAMeN performs its own taxonomic curation downstream. 
+We prefer the "sp" "UNIQ" nucleotype database which include sequences that lack species-level assignments ("sp.") and all unique haplotypes associated with each species as well ("UNIQ" portion). RAMeN performs its own taxonomic curation at the regional-remix step. 
 
 **MIDORI2 Setup**
 
 First, download the RAW "sp" "UNIQ" database for the chosen marker.  You'll need the RAW version because rainbow_bridge is not one of the formats already available. 
 
-Make a directory and download (Example GenBank269_2025-12-09 COI):
+Make a directory and download the raw file. Example:
 ```
-mkdir 2025-12-09_midori2_sp_uniq_COI
-cd 2025-12-09_midori2_sp_uniq_COI
-srun wget -c https://www.reference-midori.info/download/Databases/GenBank269_2025-12-09/RAW_sp/uniq/MIDORI2_UNIQ_SP_NUC_GB269_CO1_RAW.fasta.gz
+mkdir 2026-04-07_midori2_sp_uniq_COI
+cd 2026-04-07_midori2_sp_uniq_COI
+srun wget -c https://www.reference-midori.info/download/Databases/GenBank271_2026-04-07/RAW_sp/uniq/MIDORI2_UNIQ_SP_NUC_GB271_CO1_RAW.fasta.gz
 ```
 
 Now umcompress the file for the next step:
 ```
-gunzip MIDORI2_UNIQ_SP_NUC_GB263_CO1_RAW.fasta.gz
+gunzip MIDORI2_UNIQ_SP_NUC_GB271_CO1_RAW.fasta.gz
 ```
 
 Prep Fasta for makeblastdb
