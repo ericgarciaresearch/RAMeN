@@ -92,21 +92,21 @@ We recommend giving every project a separate GitHub repository that can be treat
 
 **Project Info**
 
-Create a `project_info.tsv` file to populate subsequent reports.
+Create a `project_info.tsv` file to populate metadata in subsequent reports.
 
-Below is example project metadata that can be reported in your project.
+Below is example project metadata that can be reported in your project but feel free to add or remove info as needed.
 
 From you project's home directiory, create project info file with:
 ```
 echo -e "Project Title\tUsing multi-marker eDNA metabarcoding to characterize pelagic ecosystem species composition in the Central North Pacific" > project_info.tsv
 echo -e "Cruise\t2022 Pacific Cruise (SE2204)" >> project_info.tsv
 echo -e "Location\tCental Pacific, multiple latitudes" >> project_info.tsv
-echo -e "Samples\t243 Initial samples (unique filtes). 465 including filter replicates" >> project_info.tsv
-echo -e "Genetic marker\tMiFish 12S" >> project_info.tsv
+echo -e "Samples\t227 Initial samples (unique filtes) with no filter replicates" >> project_info.tsv
+echo -e "Genetic marker\tCOI" >> project_info.tsv
 echo -e "Pipeline used\tRAMeN" >> project_info.tsv
-echo -e "Reference Database\tMidori2 2025-12-09_sp_uniq_12S" >> project_info.tsv
+echo -e "Reference Database\tMidori2 2026-04-07_sp_uniq_COI" >> project_info.tsv
 echo -e "Analyses done by\tname (email)" >> project_info.tsv
-echo -e "Center information\tAffiliation" >> project_info.tsv
+echo -e "Institution information\tAffiliation" >> project_info.tsv
 
 ```
 
