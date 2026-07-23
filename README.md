@@ -359,7 +359,7 @@ cd ..
 and execute with:
 ```
 # bash clean_midori2fasta_for_makeblastdb.sh  <input dir> <input_fasta> <output_fasta>
-bash RAMeN/bin/clean_midori2fasta_for_makeblastdb.sh 2025-12-09_midori2_sp_uniq_COI MIDORI2_UNIQ_SP_NUC_GB269_CO1_RAW.fasta MIDORI2_UNIQ_SP_NUC_GB269_CO1_RAW_cleanedformakeblastdb.fasta
+bash RAMeN/bin/clean_midori2fasta_for_makeblastdb.sh 2026-04-07_midori2_sp_uniq_COI MIDORI2_UNIQ_SP_NUC_GB271_CO1_RAW.fasta MIDORI2_UNIQ_SP_NUC_GB271_CO1_RAW_cleanedformakeblastdb.fasta
 ```
 where `input_dir` is the directory with the midori2 file you downloaded, `input_fasta` is the input file name, and `output_fasta` is the "cleaned" output file name, which will be used to make the database
 
@@ -395,27 +395,28 @@ singularity exec blast_latest.sif blastn -version
 
 You should see an output similar to:
 ```
-blastn: 2.16.0+
- Package: blast 2.16.0, build Jul 12 2024 20:19:54
+blastn: 2.17.0+
+ Package: blast 2.17.0, build Jul 23 2026 18:15:49
 ```
 Make a note of the version in your metadata
 
 Now, use the .sif to make the database:
 ```
-cd 2025-12-09_midori2_sp_uniq_COI
+cd 2026-04-07_midori2_sp_uniq_COI
 
 # make database
-singularity exec -B "$PWD" ../blast_latest.sif makeblastdb -in MIDORI2_UNIQ_SP_NUC_GB269_CO1_RAW_cleanedformakeblastdb.fasta -parse_seqids -dbtype nucl -taxid_map taxid_map -out midori2_customblast_sp_uniq
+singularity exec -B "$PWD" ../blast_latest.sif makeblastdb -in MIDORI2_UNIQ_SP_NUC_GB271_CO1_RAW_cleanedformakeblastdb.fasta -parse_seqids -dbtype nucl -taxid_map taxid_map -out midori2_customblast_sp_uniq
 ```
 
 If this worked ok, you should see a message like:
 ```
-Building a new DB, current time: 04/15/2025 17:09:42
-New DB name:   /share/all/midori2_database/2024-10-13_customblast_sp_uniq_COI/midori2_customblast_sp_uniq
-New DB title:  MIDORI2_UNIQ_SP_NUC_GB263_CO1_RAW_cleanedformakeblastdb.fasta
+Building a new DB, current time: 07/23/2026 13:12:37
+New DB name:   /share/all/midori2_database/2026-04-07_customblast_sp_uniq_COI/midori2_customblast_sp_uniq
+New DB title:  MIDORI2_UNIQ_SP_NUC_GB271_CO1_RAW_cleanedformakeblastdb.fasta
 Sequence type: Nucleotide
 Keep MBits: T
 Maximum file size: 3000000000B
+
 Adding sequences from FASTA; added 3003352 sequences in 71.132 seconds.
 ```
 
@@ -440,10 +441,10 @@ singularity exec -B "$PWD" ../blast_latest.sif blastdbcmd -info -db midori2_cust
 
 This should give you an output like:
 ```
-Database: MIDORI2_UNIQ_SP_NUC_GB269_CO1_RAW_cleanedformakeblastdb.fasta 
+Database: MIDORI2_UNIQ_SP_NUC_GB271_CO1_RAW_cleanedformakeblastdb.fasta 
 	2,985,458 sequences; 1,927,792,267 total bases
 
-Date: Jan 30, 2026  8:23 PM	Longest sequence: 2,298 bases 
+Date: Jul 23, 2026  8:23 PM	Longest sequence: 2,298 bases 
 
 BLASTDB Version: 5 
 ```
