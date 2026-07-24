@@ -455,7 +455,7 @@ Perfect!!! Now you have a custom database ready for your analyses.
 
 
 
-<details><summary>Create Supporting Files (barcode, sample_map, and params.yml files)</summary>
+<details><summary>Data Supporting Files (barcode and sample_map)</summary>
 <p>
 
 See the [rainbow_bridge documentation](https://github.com/mhoban/rainbow_bridge) for details
@@ -540,66 +540,6 @@ bash RAMeN/bin/rename_fastqs.sh --dry-run
 bash RAMeN/bin/rename_fastqs.sh --rename
 ```
 
-
-&nbsp;
-&nbsp;
-
-***Making a parameter file***
-
-When running rainbow, you can either specify parameters straight in the command or via a parameter file. 
-
-For example, running parameters as flags in a sbatch script:
-
-```
-# SLURM section
-
-# Load Nextflow, singularity, rainbow_bridge and other software as needed
-
-# Execute rainbow_bridge
-nextflow run rainbow_bridge.nf \
-  --maxMemory '90 GB' \
-  --paired \
-  --demultiplexed-by index \
-  --reads ../../data/ \
-  --barcode ../../data/demuxed_barcodes.tsv \
-  --blast \
-  --blast-db '2026-04-07_midori2_sp_uniq_COI/midori2_customblast_sp_uniq' \
-  --publish-mode symlink \
-  --alpha 5 \
-  --zotu-identity 1 \
-  --max-query-results 1000 \
-  --primer-mismatch 2 \
-  --qcov 90 \
-  --percent-identity 90 \
-  --evalue 0.001 \
-  --lulu \
-  --fastqc \
-  --collapse-taxonomy \
-  --dropped "LCA_dropped" \
-  --lca-qcov 90 \
-  --lca-pid 90 \
-  --lca-diff 1 \
-  --taxdump /share/all/ncbi_database/new_taxdump.zip
-
-```
-
-Or you can make a parameter file where you specified all the setting used by each run. In this file, each flag is place in a new line, removing the initial "--" and placing a column after the name of the flag. Additionally, for flags that do not have an additional argument such as "--paired", you should use "True" or "False". For example:
-```
-nano data/pared_demuxed.yml
-```
-```
-paired: true
-demultiplexed-by: index
-reads: ../data/
-sample-map: ../data/sample.map
-barcode: ../data/demuxed_barcode.tsv
-fastqc: true
-...
-```
-There are several parameters sets available. See `rainbow_bridge` README for all of these.
-
-Normally, I would recommend using a params yml file but currently `NEXTFLOW` in SEDNA is not parsing params files so we have to directly modify the flags in the script running `rainbow` for now.
-
 ---
 
 </p>
@@ -607,6 +547,7 @@ Normally, I would recommend using a params yml file but currently `NEXTFLOW` in 
 
 <details><summary>Execute rainbow_bridge</summary>
 <p>
+
 
 Assuming you have successfully installed all dependencies of `rainbow_bridge`, you should now be ready to generate your metabarcoding results.
 
@@ -621,9 +562,11 @@ mkdir analyses
 mkdir analyses/blast_90_90_00001_lca_97_97_1000hits_midori2
 cd analyses/blast_90_90_00001_lca_97_97_1000hits_midori2
 ```
+The above example uses the database as well as blast and lca setting to name the run directories but these are albitrary. 
 
-Depending on how you have set up `rainbow_bridge` in your system, you might execute directly from GitHub or locally if you cloned the repo. This step can take multiple hours depending on the size of your dataset.
+Depending on how you have set up `rainbow_bridge` in your system, you might execute directly from GitHub or locally if you cloned the repo. Generating metabarcoding results can take multiple hours depending on the size of your dataset.
 
+Similarly, you can specify rainbow_bridge parameters straight in the command or using nextflow to parse a parameters file.
 
 Locally:
 ```
@@ -680,6 +623,67 @@ nextflow run /home/egarcia/pipelines/rainbow_bridge_unzipfix/rainbow_bridge.nf \
 
 </p>
 </details>
+
+, and params.yml files)
+
+***Making a parameter file***
+
+
+When running rainbow, you can either specify parameters straight in the command or via a parameter file. 
+
+For example, running parameters as flags in a sbatch script:
+
+```
+# SLURM section
+
+# Load Nextflow, singularity, rainbow_bridge and other software as needed
+
+# Execute rainbow_bridge
+nextflow run rainbow_bridge.nf \
+  --maxMemory '90 GB' \
+  --paired \
+  --demultiplexed-by index \
+  --reads ../../data/ \
+  --barcode ../../data/demuxed_barcodes.tsv \
+  --blast \
+  --blast-db '2026-04-07_midori2_sp_uniq_COI/midori2_customblast_sp_uniq' \
+  --publish-mode symlink \
+  --alpha 5 \
+  --zotu-identity 1 \
+  --max-query-results 1000 \
+  --primer-mismatch 2 \
+  --qcov 90 \
+  --percent-identity 90 \
+  --evalue 0.001 \
+  --lulu \
+  --fastqc \
+  --collapse-taxonomy \
+  --dropped "LCA_dropped" \
+  --lca-qcov 90 \
+  --lca-pid 90 \
+  --lca-diff 1 \
+  --taxdump /share/all/ncbi_database/new_taxdump.zip
+
+```
+
+Or you can make a parameter file where you specified all the setting used by each run. In this file, each flag is place in a new line, removing the initial "--" and placing a column after the name of the flag. Additionally, for flags that do not have an additional argument such as "--paired", you should use "True" or "False". For example:
+```
+nano data/pared_demuxed.yml
+```
+```
+paired: true
+demultiplexed-by: index
+reads: ../data/
+sample-map: ../data/sample.map
+barcode: ../data/demuxed_barcode.tsv
+fastqc: true
+...
+```
+There are several parameters sets available. See `rainbow_bridge` README for all of these.
+
+Normally, I would recommend using a params yml file but currently `NEXTFLOW` in SEDNA is not parsing params files so we have to directly modify the flags in the script running `rainbow` for now.
+
+
 
 
 ### Reviewing Results
