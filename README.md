@@ -325,10 +325,10 @@ We prefer the "sp" "UNIQ" nucleotype database which include sequences that lack 
 
 First, download the RAW "sp" "UNIQ" database for the chosen marker.  You'll need the RAW version because rainbow_bridge is not one of the formats already available. 
 
-Make a directory and download the raw file. Example:
+Make a directory outside your project and download the raw file. Example:
 ```
-mkdir 2026-04-07_midori2_sp_uniq_COI
-cd 2026-04-07_midori2_sp_uniq_COI
+mkdir /path_to_databases/2026-04-07_midori2_sp_uniq_COI
+cd /path_to_databases/2026-04-07_midori2_sp_uniq_COI
 srun wget -c https://www.reference-midori.info/download/Databases/GenBank271_2026-04-07/RAW_sp/uniq/MIDORI2_UNIQ_SP_NUC_GB271_CO1_RAW.fasta.gz
 ```
 
@@ -465,6 +465,11 @@ See the [rainbow_bridge documentation](https://github.com/mhoban/rainbow_bridge)
 
 ***Making a Barcode file***
 
+Make your barcode file in your data subdir
+```
+cd /home_dir/data
+```
+
 The barcode file is used by `rainbow_bridge`to strip barcodes and primer sequences form reads.
 
 *A barcode file is always necessary except for demultiplexed runs where both barcodes and PCR primers have already been removed*
@@ -488,12 +493,13 @@ demuxed_barcode.tsv
 | --- | --- | --- | --- | --- | --- |
 | COI | S040713_1 | : | GACCCTATGGAGCTTTAGAC | CGCTGTTATCCCTADRGTAACT |  confirmed in JVB1836-16SDegenerate-testmethods.txt |
 
+
 &nbsp;
 &nbsp;
 
 ***Making a sample.map file***
 
-A `sample.map` file is only needed if you want `rainbow_bridge` to midify the file names. 
+A `sample.map` file is only needed if you want `rainbow_bridge` to midify the file names. If you do make one, place it in `/home_dir/data`
 
 `sample.map` is a simple text file with the 3 columns: the desired name, name of the forward, and reverse files.
 
@@ -538,14 +544,46 @@ bash RAMeN/bin/rename_fastqs.sh --rename
 &nbsp;
 &nbsp;
 
-***Making a Parameter yml file***
+***Making a parameter file***
 
-When running rainbow, you can either include the complete command using flags such as 
+When running rainbow, you can either specify parameters straight in the command or via a parameter file. 
+
+For example, running parameters as flags in a sbatch script:
+
 ```
---paired --reads ../data/ --barcode '../data/*.tsv'
+# SLURM section
+
+# Load Nextflow, singularity, rainbow_bridge and other software as needed
+
+# Execute rainbow_bridge
+nextflow run rainbow_bridge.nf \
+  --maxMemory '90 GB' \
+  --paired \
+  --demultiplexed-by index \
+  --reads ../../data/ \
+  --barcode ../../data/demuxed_barcodes.tsv \
+  --blast \
+  --blast-db '2026-04-07_midori2_sp_uniq_COI/midori2_customblast_sp_uniq' \
+  --publish-mode symlink \
+  --alpha 5 \
+  --zotu-identity 1 \
+  --max-query-results 1000 \
+  --primer-mismatch 2 \
+  --qcov 90 \
+  --percent-identity 90 \
+  --evalue 0.001 \
+  --lulu \
+  --fastqc \
+  --collapse-taxonomy \
+  --dropped "LCA_dropped" \
+  --lca-qcov 90 \
+  --lca-pid 90 \
+  --lca-diff 1 \
+  --taxdump /share/all/ncbi_database/new_taxdump.zip
+
 ```
 
-Or you can make a yml parameter file where you specified all the setting used by each run. In this file, each flag is place in a new line, removing the initial "--" and placing a column after the name of the flag. Additionally, for flags that do not have an additional argument such as "--paired", you should use "True" or "False". For example:
+Or you can make a parameter file where you specified all the setting used by each run. In this file, each flag is place in a new line, removing the initial "--" and placing a column after the name of the flag. Additionally, for flags that do not have an additional argument such as "--paired", you should use "True" or "False". For example:
 ```
 nano data/pared_demuxed.yml
 ```
