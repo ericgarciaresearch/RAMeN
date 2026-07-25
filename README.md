@@ -578,11 +578,11 @@ Directly from GitHub:
 ```
 $ nextflow run -<nextflow-options> mhoban/rainbow_bridge --<rainbow_bridge-options>
 ```
-As far as nextflow options, you are likely only going to use the `-params-file` option which tell nextflow to parse all setting for rainbow_bridge.
+As far as nextflow options, you are likely only going to use the `-params-file` option which tells nextflow to parse all settings for rainbow_bridge.
 
 ***Making a parameter file***
 
-In the parameter file, each flag occupies in a new line, without the initial "--" flag annotation, and placing a colon (:) after the name of the flag. Additionally, for flags that do not have an additional argument such as "--paired", you should use "True" or "False". For example:
+In the parameter file, each flag occupies a new line, without the initial "--" flag annotation, and placing a colon (:) after the name of the flag. Additionally, for flags that do not have an additional argument such as "--paired", you should use "True" or "False". For example:
 
 From your run directory:
 ```
@@ -596,6 +596,8 @@ sample-map: ../data/sample.map
 barcode: ../data/demuxed_barcode.tsv
 fastqc: true
 ...
+other parameters
+
 ```
 There are several parameters available. See `rainbow_bridge` README for all of these.
 
@@ -639,7 +641,7 @@ Sbatch example for a local run:
 
 **Note on Parameters:** Many of the above parameters are not required to run rainbow_bridge and there are also other options available (see rainbow documentation). The above set of parameters are here used for sample COI dataset. RAMeN uses a lenient parameter set in the Metabarcoding Module, which relaxes thresholds allowing more hit to pass initial filters. More strengent filters are then applied in the Regional-Remix Module allowing the user to catch potential situation where lenient filters might be beneficial for an specific dataset. Additionally, here we use --alpha 5 for COI (based on Antich *et. al.* 2021 https://doi.org/10.1186/s12859-021-04115-6) but would recommend --alpha 2 for other markers.  
 
-Sbatch example for a nextflow-git run:
+Sbatch example for a Nextflow-Git run:
 ```
 # SLURM section
 
@@ -649,15 +651,16 @@ Sbatch example for a nextflow-git run:
 nextflow run -params-file pared_demuxed.yml mhoban/rainbow_bridge
 ```
 
-RAMeN provides an example sbatch script for convinence. This script expects the directory structure specified in this README. Modify this script to fit your system and file organization.
+**RAMeN** provides an example sbatch script for convinence. This script expects the directory structure specified in this README. Modify this script to fit your system and file organization.
 ```
 RAMeN/bin/run_rainbow_bridge.sh
 ```
 
-# execute rainbow_bridge from your run directory:
+***Execute rainbow_bridge from your run directory:***
+
+```
 sbatch RAMeN/bin/run_rainbow_bridge.sh
 ```
-
 
 </p>
 </details>
