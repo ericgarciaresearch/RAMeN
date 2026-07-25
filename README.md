@@ -562,13 +562,13 @@ mkdir analyses
 mkdir analyses/blast_90_90_00001_lca_97_97_1000hits_midori2
 cd analyses/blast_90_90_00001_lca_97_97_1000hits_midori2
 ```
-The above example uses the database as well as blast and lca setting to name the run directories but these are albitrary. 
+The above example uses the database as well as blast and lca settings to name the run directory but the naming is arbitrary. 
 
-Depending on how you have set up `rainbow_bridge` in your system, you might execute directly from GitHub or locally if you cloned the repo. Generating metabarcoding results can take multiple hours depending on the size of your dataset.
+If you have not done it already, now is the time to decide how to set up `rainbow_bridge` in your system.  You might use nextflow to execute it directly from GitHub or you can git clone the repo and run it locally (see the [rainbow_bridge documentation](https://github.com/mhoban/rainbow_bridge) for full details). If you clone it, place the repo outside your project. It is not a good idea to embed git repositories. Generating metabarcoding results can take multiple hours depending on the size of your dataset.
 
-Similarly, you can specify rainbow_bridge parameters straight in the command or using nextflow to parse a parameters file.
+Similarly, you can specify rainbow_bridge parameters straight in the command or use nextflow to parse a parameters file.
 
-Locally:
+Local run with parameters in command:
 ```
 $ rainbow_bridge.nf -<nextflow-options> --<rainbow_bridge-options>
 ```
@@ -578,68 +578,40 @@ Directly from GitHub:
 ```
 $ nextflow run -<nextflow-options> mhoban/rainbow_bridge --<rainbow_bridge-options>
 ```
-
-We recommend using a sbatch script and the `-params-file` option.
-
-For example:
-```
-#script
-RAMeN/bin/run_rainbow_bridge.sh
-
-# execute rainbow_bridge
-sbatch RAMeN/bin/run_rainbow_bridge.sh
-```
-*Note: To use this script, you will need to modify it to your system's configuration*
-
-
-Now modify the script directly with the desired parameters. Base script has:
-```
-nextflow run /home/egarcia/pipelines/rainbow_bridge_unzipfix/rainbow_bridge.nf \
-  --maxMemory '185 GB' \
-  --paired \
-  --demultiplexed-by index \
-  --reads ../../data/ \
-  --barcode ../../data/demuxed_barcodes.tsv \
-  --blast \
-  --blast-db '/share/all/midori2_database/2025-03-08_customblast_sp_uniq_16S/midori2_customblast_sp_uniq' \
-  --publish-mode copy \
-  --alpha 2 \
-  --zotu-identity 1 \
-  --max-query-results 1000 \
-  --primer-mismatch 2 \
-  --qcov 0 \
-  --percent-identity 0 \
-  --evalue 0.1 \
-  --lulu \
-  --fastqc \
-  --collapse-taxonomy \
-  --dropped "LCA_dropped" \
-  --lca-qcov 70 \
-  --lca-pid 70 \
-  --lca-diff 1 \
-  --taxdump /share/all/ncbi_database/new_taxdump.zip
-```
-
-
-</p>
-</details>
-
-, and params.yml files)
+As far as nextflow options, you are likely only going to use the `-params-file` option which tell nextflow to parse all setting for rainbow_bridge.
 
 ***Making a parameter file***
 
+In the parameter file, each flag occupies in a new line, without the initial "--" flag annotation, and placing a colon (:) after the name of the flag. Additionally, for flags that do not have an additional argument such as "--paired", you should use "True" or "False". For example:
 
-When running rainbow, you can either specify parameters straight in the command or via a parameter file. 
+From your run directory:
+```
+nano pared_demuxed.yml
+```
+```
+paired: true
+demultiplexed-by: index
+reads: ../data/
+sample-map: ../data/sample.map
+barcode: ../data/demuxed_barcode.tsv
+fastqc: true
+...
+```
+There are several parameters available. See `rainbow_bridge` README for all of these.
 
-For example, running parameters as flags in a sbatch script:
 
+***Executing rainbow_bridge***
+
+We recommend using a script whether you execute rainbow_bridge locally or not.
+
+Sbatch example for a local run:
 ```
 # SLURM section
 
-# Load Nextflow, singularity, rainbow_bridge and other software as needed
+# load Nextflow, singularity, rainbow_bridge and other software as needed
 
-# Execute rainbow_bridge
-nextflow run rainbow_bridge.nf \
+# execute rainbow_bridge
+/path_to_rainbow/rainbow_bridge.nf \
   --maxMemory '90 GB' \
   --paired \
   --demultiplexed-by index \
@@ -663,25 +635,32 @@ nextflow run rainbow_bridge.nf \
   --lca-pid 90 \
   --lca-diff 1 \
   --taxdump /share/all/ncbi_database/new_taxdump.zip
-
 ```
 
-Or you can make a parameter file where you specified all the setting used by each run. In this file, each flag is place in a new line, removing the initial "--" and placing a column after the name of the flag. Additionally, for flags that do not have an additional argument such as "--paired", you should use "True" or "False". For example:
-```
-nano data/pared_demuxed.yml
-```
-```
-paired: true
-demultiplexed-by: index
-reads: ../data/
-sample-map: ../data/sample.map
-barcode: ../data/demuxed_barcode.tsv
-fastqc: true
-...
-```
-There are several parameters sets available. See `rainbow_bridge` README for all of these.
+**Note on Parameters:** Many of the above parameters are not required to run rainbow_bridge and there are also other options available (see rainbow documentation). The above set of parameters are here used for sample COI dataset. RAMeN uses a lenient parameter set in the Metabarcoding Module, which relaxes thresholds allowing more hit to pass initial filters. More strengent filters are then applied in the Regional-Remix Module allowing the user to catch potential situation where lenient filters might be beneficial for an specific dataset. Additionally, here we use --alpha 5 for COI (based on Antich *et. al.* 2021 https://doi.org/10.1186/s12859-021-04115-6) but would recommend --alpha 2 for other markers.  
 
-Normally, I would recommend using a params yml file but currently `NEXTFLOW` in SEDNA is not parsing params files so we have to directly modify the flags in the script running `rainbow` for now.
+Sbatch example for a nextflow-git run:
+```
+# SLURM section
+
+# load Nextflow, singularity, and other software as needed
+
+# execute rainbow_bridge
+nextflow run -params-file pared_demuxed.yml mhoban/rainbow_bridge
+```
+
+RAMeN provides an example sbatch script for convinence. This script expects the directory structure specified in this README. Modify this script to fit your system and file organization.
+```
+RAMeN/bin/run_rainbow_bridge.sh
+```
+
+# execute rainbow_bridge from your run directory:
+sbatch RAMeN/bin/run_rainbow_bridge.sh
+```
+
+
+</p>
+</details>
 
 
 
