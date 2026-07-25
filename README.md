@@ -580,6 +580,9 @@ $ nextflow run -<nextflow-options> mhoban/rainbow_bridge --<rainbow_bridge-optio
 ```
 As far as nextflow options, you are likely only going to use the `-params-file` option which tells nextflow to parse all settings for rainbow_bridge.
 
+&nbsp;
+&nbsp;
+
 ***Making a parameter file***
 
 In the parameter file, each flag occupies a new line, without the initial "--" flag annotation, and placing a colon (:) after the name of the flag. Additionally, for flags that do not have an additional argument such as "--paired", you should use "True" or "False". For example:
@@ -601,6 +604,9 @@ other parameters
 ```
 There are several parameters available. See `rainbow_bridge` README for all of these.
 
+
+&nbsp;
+&nbsp;
 
 ***Executing rainbow_bridge***
 
