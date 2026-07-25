@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ### Cleaning Midori2 fastas and Making taxid_map ###
 # Midori2 raw fasta files have sequence names with the entire taxonomic information making these super long. makeblastdb has a limit of 50 characters.

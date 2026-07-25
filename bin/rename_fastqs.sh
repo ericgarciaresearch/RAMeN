@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This script renames fastq files from Jonah Ventures sequencing facility.
 # JV190_16SDegenerate_WhitneyJonathan_S045173.1.R1.fastq.gz  ->  S045173_1.R1.fastq.gz
