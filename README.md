@@ -816,16 +816,15 @@ cp RAMeN/bin/summ* scripts
 cp RAMeN/bin/run_preprocess_summaries.sh scripts
 ```
 
-Navigate to the preprocess directory and execute the `read_calculator_rainbow_preprocess.sh` script 
+Navigate to the preprocess directory and execute the `run_preprocess_summaries.sh` script 
 ```
 cd preprocess
-cp RAMeN/bin/summ* ../scripts
+bash run_preprocess_summaries.sh
 ```
 
-* This script creates **read_count_loss_preprocess.tsv** file that reports the number of reads remaning after each step is run as well as the percent of reads loss in each step relative to the previous
-* We will then visualize the read fate processing this tsv file with the R script **plot_preprocess_results.R**
+* This script creates the *summary-readcount_preprocess.tsv* file that reports the number of reads remaning after each step is run as well as the percent of reads loss in each step relative to the previous
 
-If your read calculator worked ok you should see a tsv file that looks like this:
+If the read count worked ok the summary-readcount_preprocess.tsv file that looks like this:
 
 |sample | raw_F | raw_R | trim_merge  |  ngsfilter  |   l_filtered  |  relabeled  |   %_loss_trim_merge  |  %_loss_ngsfilter | %_loss_l_filtered  |   %_loss_relabeled| 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -835,6 +834,8 @@ If your read calculator worked ok you should see a tsv file that looks like this
 |S040715_2  |   48762 | 48762 | 48407 | 48381 | 48381 | 48381 | 0.73 | 0.05 | 0.00 | 0.00|
 
 Review your table and look for read flags or disernable patterns. 
+
+* We will then visualize the read fate processing this tsv file with the R script **plot_preprocess_results.R**
 
 &nbsp;
 &nbsp;
