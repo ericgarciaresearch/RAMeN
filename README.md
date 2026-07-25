@@ -144,7 +144,7 @@ In this case, all relevant information can be included within a short name as "S
 
 If you have any metadata, this is a good time to extract that info.
 
-Create the file `sample_site_rep.tsv` with sample as the first column, site (or other grouping metadata), and replicate (number of file withing the previous grouping)
+Create the file `sample_site_rep.tsv` with sample as the first column, site (or other grouping metadata), and replicate (number of file within the previous grouping)
 
 Example:
 ```
@@ -610,7 +610,9 @@ There are several parameters available. See `rainbow_bridge` README for all of t
 
 ***Executing rainbow_bridge***
 
-We recommend using a script whether you execute rainbow_bridge locally or not.
+**Executing Info**
+
+We recommend using a script whether you execute rainbow_bridge locally or not. RAMeN provides several bash scripts in this module, consider using sbatch according to your system, or other ways of logging output to ease troubleshooting. 
 
 Sbatch example for a local run:
 ```
@@ -657,15 +659,17 @@ Sbatch example for a Nextflow-Git run:
 nextflow run -params-file pared_demuxed.yml mhoban/rainbow_bridge
 ```
 
-**RAMeN** provides an example sbatch script for convinence. This script expects the directory structure specified in this README. Modify this script to fit your system and file organization.
+**RAMeN** provides an example sbatch script for convinence. This script expects file names and qthe directory structure specified in this README. Modify this script to fit your system and file organization.
 ```
 RAMeN/bin/run_rainbow_bridge.sh
 ```
 
-***Execute rainbow_bridge from your run directory:***
+**Execute rainbow_bridge from your run directory:**
 
 ```
-sbatch RAMeN/bin/run_rainbow_bridge.sh
+cp RAMeN/bin/run_rainbow_bridge.sh home_dir/analyses/run_dir/
+cd home_dir/analyses/run_dir/
+sbatch run_rainbow_bridge.sh
 ```
 
 ---
@@ -741,7 +745,7 @@ Below is a short description of the output but read the [rainbow_bridge](https:/
 Briefly, `rainbow_bridge` will create 3 main subdirectories:
 * **work**
   * These are files created by NEXTFLOW (genrally, you don't need to look at these).
-  * If you use symlinks, these will direct to one directory withing `work`
+  * If you use symlinks, these will direct to one directory within `work`
 * **preprocess**
   * Various intermediate files as filters, trims, etc, are applied to sequence files
   * Here, you can analyze the quality of your dataset and see what filters remove more reads, etc.
@@ -795,12 +799,27 @@ To view these files, download and open them with a web browser.
 &nbsp;
 &nbsp;
 
-**Generate Read Count Summary**
+**Generate Preprocess Summaries**
+
+RAMeN includes scripts that automatically prepare summaries that will allow you to assess the performance of your dataset as well the parameters used:
+
+* summarize_rainbow_trim_merge.sh
+* summarize_readcount_rainbow_preprocess.sh
+* summarize_readL_rainbow_preprocess.sh
+
+These are executed via the master script `run_preprocess_summaries.sh`
+
+Copy these into the project's scripts subdirectory:
+```
+cd home_dir
+cp RAMeN/bin/summ* scripts
+cp RAMeN/bin/run_preprocess_summaries.sh scripts
+```
 
 Navigate to the preprocess directory and execute the `read_calculator_rainbow_preprocess.sh` script 
 ```
 cd preprocess
-bash RAMeN/bin/read_calculator_rainbow_preprocess.sh
+cp RAMeN/bin/summ* ../scripts
 ```
 
 * This script creates **read_count_loss_preprocess.tsv** file that reports the number of reads remaning after each step is run as well as the percent of reads loss in each step relative to the previous
