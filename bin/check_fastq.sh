@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 ##########################
-### check_fastq_awk.sh ###
+###   check_fastq.sh   ###
 ##########################
 
-# Usage: ./check_fastq_awk.sh <fastq_directory>
+# Usage: ./check_fastq.sh <fastq_directory>
 
 # Check input
 if [[ -z "$1" ]]; then
