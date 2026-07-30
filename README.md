@@ -812,8 +812,8 @@ These are executed via the master script `run_preprocess_summaries.sh`
 Copy these into the project's scripts subdirectory:
 ```
 cd home_dir
-cp RAMeN/bin/summ* scripts
-cp RAMeN/bin/run_preprocess_summaries.sh scripts
+cp RAMeN/bin/summ* home_dir/scripts
+cp RAMeN/bin/run_preprocess_summaries.sh home_dir/scripts
 ```
 
 Navigate to the preprocess directory and execute the `run_preprocess_summaries.sh` script 
