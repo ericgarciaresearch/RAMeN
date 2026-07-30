@@ -777,7 +777,7 @@ Briefly, `rainbow_bridge` will create 3 main subdirectories:
 </p>
 </details>
 
-<details><summary>QC and read fate in preprocess (Preprocessing Report)</summary>
+<details><summary>QC and read fate in preprocess (*Preprocessing Report*)</summary>
 <p>
 
 Is time to analyze your results!!! 
