@@ -961,17 +961,17 @@ flowchart TD
 
 A[Start. Review reports and summary tables.] --> B{Large data loss at trim_merge?}
 
-B -- Yes --> C{Ave percent dimers (PreTable 1) approx. equal to unaligned reads (PreFig 6)?}
+B -- Yes --> C{Ave percent dimers, PreTable 1, approx. equal to unaligned reads, PreFig 6?}
 
 C -- Yes --> D[Loss driven by primer dimers. No collapse parameter change recommended.]
 
 C -- No --> E[Test overlap. Lower minalignmentlength to 8 or 6.]
 
-E --> F{Many aligned but not collapsed pairs (PreFig 6)?}
+E --> F{Many aligned but not collapsed pairs, PreFig 6?}
 
 F -- Yes --> G[Overlap likely limiting. Further adjust minalignmentlength cautiously.]
 
-F -- No --> H{High truncated collapsed reads (PreFig 6)?}
+F -- No --> H{High truncated collapsed reads ,PreFig 6?}
 
 H -- Yes --> I[Possible aggressive quality trimming. Consider lowering minquality cautiously.]
 
