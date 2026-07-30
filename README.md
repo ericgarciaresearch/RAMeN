@@ -874,7 +874,19 @@ home_dir/analyses/run_dir/preprocess/summary-readL_preprocess.tsv
 	
 * Click `yes` when prompted to restart R to update packages
 
-* This script will generate 9 plots (pgn) and the `Preprocessing Report` (PDF)
+This script will generate the following 9 plots (pgn) and the `Preprocessing Report` (PDF)
+
+| Plot         | File name                                    | Description                                                                                                                                                                                                                                                 |
+| ------------ | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **PreFig 1** | `pre1_barplot_preprocess_read_summary.png`   | **Total Reads per Preprocessing Stage.** Displays the total number of reads retained after each preprocessing step, providing an overview of cumulative read retention throughout the pipeline.                                                             |
+| **PreFig 2** | `pre2_boxplot_preprocess_read_summary.png`   | **Distribution of Read Counts by Preprocessing Stage.** Shows the variability of read counts across samples at each preprocessing stage using boxplots, making it easy to identify differences in sample retention and potential outliers.                  |
+| **PreFig 3** | `pre3_total_read_loss_per_stage.png`         | **Total Read Loss per Preprocessing Stage.** Summarizes the absolute number of reads removed at each preprocessing step, highlighting where the greatest losses occur.                                                                                      |
+| **PreFig 4** | `pre4_percent_total_read_loss_per_stage.png` | **Percent Total Read Loss per Preprocessing Stage.** Illustrates the proportion of the original reads discarded at each stage, allowing comparison of the relative impact of different filtering steps.                                                     |
+| **PreFig 5** | `pre5_average_read_length_barplot.png`       | **Average Read Length Across Preprocessing Steps.** Compares the mean read length after each preprocessing step, showing how trimming and filtering affect sequence length.                                                                                 |
+| **PreFig 6** | `pre6_read_alignment.png`                    | **Read Alignment Summary for `trim_merge`.** Presents the proportions of aligned, collapsed, truncated, and unaligned reads as a pie chart, summarizing the outcomes of the read alignment and merging process.                                             |
+| **PreFig 7** | `pre7_reads_per_sample.png`                  | **Read Counts per Sample by Preprocessing Stage.** Displays read counts for every sample at each preprocessing stage, with dashed lines indicating the stage-specific mean to facilitate comparison among samples.                                          |
+| **PreFig 8** | `pre8_read_loss_per_sample.png`              | **Read Loss per Sample by Preprocessing Stage.** Shows the percentage of reads lost for each sample between consecutive preprocessing steps, with mean loss values highlighted to identify samples experiencing unusually high read loss.                   |
+| **PreFig 9** | `pre9_read_length_distribution_per_step.png` | **Read Length Distribution per Preprocessing Step.** Visualizes read length distributions for each preprocessing step using histograms, with dashed lines indicating the mean read length to illustrate changes in sequence length throughout the workflow. |
 
 
 **Review:**
