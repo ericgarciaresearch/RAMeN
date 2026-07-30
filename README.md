@@ -649,7 +649,7 @@ Sbatch example for a local run:
   --taxdump /share/all/ncbi_database/new_taxdump.zip
 ```
 
-**Note on Parameters:** Many of the above parameters are not required to run rainbow_bridge and there are also other options available (see rainbow documentation). The above set of parameters are here used for sample COI dataset. RAMeN uses a lenient parameter set in the Metabarcoding Module, which relaxes thresholds allowing more hit to pass initial filters. More strengent filters are then applied in the Regional-Remix Module allowing the user to catch potential situation where lenient filters might be beneficial for an specific dataset. Additionally, here we use --alpha 5 for COI (based on Antich *et. al.* 2021 https://doi.org/10.1186/s12859-021-04115-6) but would recommend --alpha 2 for other markers.  
+**Note on Parameters:** Many of the above parameters are not required to run rainbow_bridge and there are also other options available (see rainbow documentation). The above set of parameters are here used for sample COI dataset. RAMeN uses a lenient parameter set in the Metabarcoding Module, which relaxes thresholds allowing more hits to pass initial filters. More stringent filters are then applied in the Regional-Remix Module allowing the user to catch potential situations where lenient filters might be beneficial for an specific dataset. Additionally, here we use --alpha 5 for COI (based on Antich *et. al.* 2021 https://doi.org/10.1186/s12859-021-04115-6) but would recommend --alpha 2 (rainbow_bridge's default) for other markers.  
 
 Sbatch example for a Nextflow-Git run:
 ```
@@ -1062,11 +1062,10 @@ This script will generate the following 19 plots (pgn) and the `Metabarcoding Re
 Review the following reports:
 
 * *Metabarcoding Report*
-
-Rerun with different parameters as needed or continue to the next step.
 	
 This report provides a comprehensive review of both technical and biological aspects of the metabarcoding results. Use this report to determine if metabarcoding parameter adjustment and subsequent runs are needed. These are the main parameters you might want to modify if you would like to explore different parameter space:
 
+Once you are satisfy with your run, move into the next step.
 
 </p>
 </details>
