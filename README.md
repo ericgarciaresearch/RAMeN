@@ -822,7 +822,16 @@ cd preprocess
 bash run_preprocess_summaries.sh
 ```
 
-* This script creates the *summary-readcount_preprocess.tsv* file that reports the number of reads remaning after each step is run as well as the percent of reads loss in each step relative to the previous
+This script creates the following output files
+
+| Output file | | Description |
+| --- | --- |
+| summary-trim_merge.txt | AdapterRemoval settings and average trimming statistics across all samples |
+| summary-readalign_trim_merge.tsv | Simplified average read alignment summary from AdapterRemoval |
+| summary-readcount_preprocess.tsv | Read counts and percent read loss at each preprocessing step |
+| summary-readL_preprocess.tsv | One row per read/sequence giving its length at each preprocessing step |
+
+*summary-readcount_preprocess.tsv* file that reports the number of reads remaining after each step is run as well as the percent of reads loss in each step relative to the previous
 
 If the read count worked ok the summary-readcount_preprocess.tsv file that looks like this:
 
@@ -842,14 +851,35 @@ Review your table and look for read flags or disernable patterns.
 
 **Ploting Read Summary**
 
-Now that you have `read_count_loss_preprocess.tsv` it is time to use R. You can use the following custom Rscript to make plots to visualize and easily identify patterns.
+Now that the output of `check_dimer.sh` and `run_preprocess_summaries.sh` have been created, it is time to use R. Use the following custom Rscript and R markdown code to visualize plots and generate a report where you can easily determine if patterns exist.
+
 ```
 RAMeN/bin/plot_preprocess_results.R
+RAMeN/bin/pipeline_preprocess_report.Rmd
 ```
 
-Download both `plot_preprocess_results.R` and `read_count_loss_preprocess.tsv`, and run the Rscript in your local computer.
+Place the above scripts and needed output from your project in the same local directory:
+```
+RAMeN/bin/plot_preprocess_results.R
+RAMeN/bin/pipeline_preprocess_report.Rmd
+home_dir/project_info.tsv
+home_dir/data/average_primer_dimer.tsv
+home_dir/analyses/run_dir/preprocess/summary-trim_merge.txt
+home_dir/analyses/run_dir/preprocess/summary-readalign_trim_merge.tsv
+home_dir/analyses/run_dir/preprocess/summary-readcount_preprocess.tsv
+home_dir/analyses/run_dir/preprocess/summary-readL_preprocess.tsv
+```
+
+**Open and run** `plot_preprocess_results.R` in your local computer.
+	
+	* Click `yes` when prompted to restart R to update packages
+
+	* This script will generate 9 plots (pgn) and the `Preprocessing Report` (PDF)
+
 
 **Review:**
+
+Review the following reports:
 
 * FASTQC Reports
 * Preprocessing Report
