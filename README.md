@@ -961,7 +961,7 @@ flowchart TD
 
 A[Start. Review reports and summary tables.] --> B{Large data loss at trim_merge?}
 
-B -- Yes --> C{Ave percent dimers, PreTable 1, approx. equal to unaligned reads, PreFig 6?}
+B -- Yes --> C{Ave % dimers, PreTable 1, approx. equal to unaligned reads, PreFig 6?}
 
 C -- Yes --> D[Loss driven by primer dimers. No collapse parameter change recommended.]
 
