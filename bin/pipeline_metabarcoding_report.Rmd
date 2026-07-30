@@ -1,0 +1,246 @@
+---
+output: 
+  pdf_document:
+    fig_caption: true
+    dev: pdf
+fontsize: 11pt
+geometry: margin=1in
+header-includes:
+   - \usepackage{float}
+   - \usepackage{caption}
+   - \captionsetup{labelformat=empty}
+   - \AtBeginDocument{\let\maketitle\relax}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE, 
+  warning = FALSE, 
+  message = FALSE,
+  fig.align = "center",
+  fig.pos = 'H',
+  dpi = 300,
+  out.width = "100%"
+)
+
+library(tidyverse)
+library(kableExtra)
+
+theme_set(
+  theme_minimal(base_size = 12) +
+    theme(
+      plot.title = element_text(size = 14, face = "bold"),
+      legend.position = "none"
+    )
+)
+```
+
+---
+
+```{=latex}
+\begin{center}
+\Huge \textbf{Pipeline Metabarcoding Report}
+
+\vspace{0.5cm}
+
+\large
+\end{center}
+```
+
+---
+
+Report generated on `r format(Sys.Date(), '%B %d, %Y')`.<br>
+
+\vspace{0.5cm}
+
+  # Project Info
+  
+```{r}
+project_info <- read_tsv("project_info.tsv", show_col_types = FALSE)
+
+project_info %>%
+  kable(
+    booktabs = TRUE,
+    format = "latex",
+    longtable = FALSE
+  ) %>%
+  kable_styling(
+    latex_options = c("hold_position","scale_down"),
+    font_size = 10
+  ) %>%
+  column_spec(1, width = "6cm") %>%
+  column_spec(2, width = "8cm")
+```
+
+---
+
+  # Metabarcoding Overview
+
+This report summarizes metabarcoding results following preprocessing, clustering, taxonomic assignment, but before regional filers and final result curation done by the regional_remix step.
+
+Briefly, metabarcoding process include the following rainbow_bridge steps in this order:
+
+* blast
+* zotus
+* lulu
+* taxonomy
+* final
+
+\newpage
+
+The report includes:
+
+* Sample-level read comparisons
+* BLAST and LCA filtering metrics
+* ASV (zOTU) retention across steps
+* Taxonomic diversity summaries
+* Abundance distributions
+* Heatmaps of taxa across samples
+
+
+	# Helper Scripts
+
+```{r}
+helper_data <- data.frame(
+  `Helper Script` = c("plot_metabarcoding_results.R"),
+  Process = c("Makes plots for the metabarcoding report")
+)
+
+helper_data %>%
+  kable(booktabs = TRUE, format = "latex", col.names = c("Helper Script", "Process")) %>%
+  kable_styling(latex_options = "hold_position") %>%
+  column_spec(1, italic = TRUE, color = "blue")
+```
+
+---
+
+\newpage
+
+# Sample Read Comparison
+
+```{r, fig.cap="MetaFig 1: Median and distribution of the number of reads (normal and log10 scales) before (Initial) and after preprocessing (Final). Final samples only consider indivials present at the final table: zotu\\_table\\_final\\_curated.tsv"}
+knitr::include_graphics("p1_reads_per_init-final_samples.png")
+```
+
+\newpage
+
+# BLAST and LCA Metrics
+
+```{r, fig.cap="MetaFig 2: Median and distribution of the number of hits per zOTU in the inital Blast and during the LCA process (LCA\\_intermediate) right before final selection of best hit"}
+knitr::include_graphics("p2_number_of_hits.png")
+```
+
+\newpage
+
+```{r, fig.cap="MetaFig 3: Median and distribution of the Evalues of hits from inital Blast and during the LCA process (LCA\\_intermediate) right before final selection of best hit"}
+knitr::include_graphics("p3_eval_before_after_filters.png")
+```
+
+\newpage
+
+```{r, fig.cap="MetaFig 4: Median and distribution of Percent Identity and Query Coverage of hits from inital Blast and during the LCA process (LCA\\_intermediate) right before final selection of best hit"}
+knitr::include_graphics("p4_pident_qcov.png")
+```
+
+\newpage
+
+# zOTU Retention Across Pipeline
+
+```{r, fig.cap="MetaFig 5: Number of zOTUs retained across pipeline stages"}
+knitr::include_graphics("p5_number_of_zotus.png")
+```
+
+\newpage
+
+# LCA Filtering Summary
+
+```{r, fig.cap="MetaFig 6: Number zOTUs with two or more hits with different assigment labels but within the same highest blast metrics threshold, preventing the algorithm from picking the best label at a specific taxonomic level. This level gets an LCA\\_dropped classification and recieves a taxonomic label only at the Lowest Common Ancestor (LCA) or the level where all hits are in concordance"}
+knitr::include_graphics("p6_number_of_lca_drops.png")
+```
+
+\newpage
+
+# Taxonomic Diversity
+
+```{r, fig.cap="MetaFig 7: Number of unique taxa across all samples and zOTUs."}
+knitr::include_graphics("p7_final_taxonomic_diversity.png")
+```
+
+\newpage
+
+```{r, fig.cap="MetaFig 8: Median and spread of invernal diversity within each taxonomic level"}
+knitr::include_graphics("p8_spread_taxonomic_diversity.png")
+```
+
+\newpage
+
+# Dominant Taxa
+
+```{r, fig.cap="MetaFig 9: Top 10 most abundant species"}
+knitr::include_graphics("p9_top10_species.png")
+```
+
+\newpage
+
+```{r, fig.cap="MetaFig 10: Top 10 most abundant genera"}
+knitr::include_graphics("p10_top10_genera.png")
+```
+
+\newpage
+
+```{r, fig.cap="MetaFig 11: Top 10 most abundant families"}
+knitr::include_graphics("p11_top10_families.png")
+```
+
+\newpage
+
+```{r, fig.cap="MetaFig 12: Top 10 most abundant orders"}
+knitr::include_graphics("p12_top10_orders.png")
+```
+
+\newpage
+
+```{r, fig.cap="MetaFig 13: Top most abundant classes"}
+knitr::include_graphics("p13_top10_classes.png")
+```
+
+\newpage
+
+```{r, fig.cap="MetaFig 14: Top most abundant phyla"}
+knitr::include_graphics("p14_top10_phyla.png")
+```
+
+
+
+# Read Distribution
+
+```{r, fig.cap="MetaFig 15: Distribution of read counts across samples"}
+knitr::include_graphics("p15_read_count_bins_barplot.png")
+```
+
+\newpage
+
+```{r, fig.cap="MetaFig 16: Distribution of read counts per species"}
+knitr::include_graphics("p16_read_count_bins_species_summed.png")
+```
+
+---
+
+# Heatmaps
+
+```{r, fig.cap="MetaFig 17: Species-level read abundance heatmap"}
+knitr::include_graphics("p17_species_heatmap.png")
+```
+
+\newpage
+
+```{r, fig.cap="MetaFig 18: Genus-level read abundance heatmap"}
+knitr::include_graphics("p18_genus_heatmap.png")
+```
+
+\newpage
+
+```{r, fig.cap="MetaFig 19: Family-level read abundance heatmap"}
+knitr::include_graphics("p19_family_heatmap.png")
+```
+
