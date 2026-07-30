@@ -1,0 +1,315 @@
+---
+output: 
+  pdf_document:
+    fig_caption: true
+    dev: pdf
+fontsize: 11pt
+geometry: margin=1in
+header-includes:
+   - \usepackage{float}
+   - \usepackage{caption}
+   - \captionsetup{labelformat=empty}
+   - \AtBeginDocument{\let\maketitle\relax}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE, 
+  warning = FALSE, 
+  message = FALSE,
+  fig.align = "center",
+  fig.pos = 'H',
+  dpi = 300,        # High resolution for any remaining raster elements
+  out.width = "100%" # Ensures plots fit the page width
+)
+
+library(tidyverse)
+library(kableExtra)
+
+# Global theme from your R script
+theme_set(
+  theme_minimal(base_size = 12) +
+    theme(
+      plot.title = element_text(size = 14, face = "bold"),
+      legend.position = "none"
+    )
+)
+```
+ 
+---
+ 
+```{=latex}
+\begin{center}
+\Huge \textbf{Pipeline Preprocess Report}
+
+\vspace{0.5cm}
+
+\large
+\end{center}
+```
+---
+
+Report generated on `r format(Sys.Date(), '%B %d, %Y')`.<br>
+
+\vspace{0.5cm}
+
+  # Project Info
+  
+```{r}
+project_info <- read_tsv("project_info.tsv", show_col_types = FALSE)
+
+project_info %>%
+  kable(
+    booktabs = TRUE,
+    format = "latex",
+    longtable = FALSE
+  ) %>%
+  kable_styling(
+    latex_options = c("hold_position","scale_down"),
+    font_size = 10
+  ) %>%
+  column_spec(1, width = "6cm") %>%
+  column_spec(2, width = "8cm")
+```
+
+---
+
+  # Overview
+  
+  This report documents how the dataset fared during the pipeline preprocessing.
+
+  Briefly, dimer content is estimated in raw files and read stats are generated across the rest of the Preprocess (rainbow_bridge steps in this order):
+  
+  - trim_merge  
+  - ngsfilter  
+  - length_filtered  
+  - relabeled  
+  - merged  
+
+---
+
+\newpage
+
+  # Helper Scripts
+  
+```{r}
+helper_data <- data.frame(
+  `Helper Script` = c("check_dimer.sh", "run_preprocess_summaries.sbatch", "plot_preprocess_results.R"),
+  Process = c("Estimates dimer content across raw files", 
+              "Generates read statistic before and after each step", 
+              "Makes plots for the preprocessing report")
+)
+
+helper_data %>%
+  kable(booktabs = TRUE, format = "latex", col.names = c("Helper Script", "Process")) %>%
+  kable_styling(latex_options = "hold_position") %>%
+  column_spec(1, italic = TRUE, color = "blue")
+``` 
+  
+---
+  
+  # Estimated Dimer Content Across Files
+```{r}
+dimer_data <- read_tsv("average_primer_dimer.tsv", show_col_types = FALSE)
+
+dimer_data %>%
+  kable(booktabs = TRUE, format = "latex") %>%
+  kable_styling(latex_options = c("hold_position", "striped"))
+```
+
+  ---
+
+\newpage
+
+# Read abundance, loss, length, and alignment in dataset
+
+```{r, fig.cap="PreFig 1: Number of reads across samples after each preprocess step"}
+readcount <- read_tsv("summary-readcount_preprocess.tsv", show_col_types = FALSE)
+
+readcount <- readcount %>%
+  mutate(raw = rowMeans(select(., raw_F, raw_R))) %>%
+  select(sample, raw, trim_merge, ngsfilter, l_filtered, relabeled)
+
+readcount_long <- readcount %>%
+  pivot_longer(-sample, names_to = "stage", values_to = "reads")
+
+readcount_long$stage <- factor(
+  readcount_long$stage,
+  levels = c("raw", "trim_merge", "ngsfilter", "l_filtered", "relabeled")
+)
+
+stage_totals <- readcount_long %>%
+  group_by(stage) %>%
+  summarise(total_reads = sum(reads, na.rm = TRUE))
+
+pre1 <- ggplot(stage_totals, aes(stage, total_reads, fill = stage)) +
+  geom_col() +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Total Reads per Preprocessing Stage", x = "Stage", y = "Total Reads")
+
+pre1
+```
+
+\newpage
+
+```{r, fig.cap="PreFig 2: Distribution of reads across samples after each preprocess step."}
+pre2 <- ggplot(readcount_long, aes(stage, reads, fill = stage)) +
+  geom_boxplot(outlier.size = 0.5) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Distribution of Read Counts by Preprocessing Stage", x = "Stage", y = "Read Count")
+
+pre2
+```
+  
+\newpage
+ 
+```{r, fig.cap="PreFig 3: Number of reads lost across samples after each preprocess step."}
+readcount_loss_abs <- readcount %>%
+  mutate(
+    loss_trim_merge = raw - trim_merge,
+    loss_ngsfilter = trim_merge - ngsfilter,
+    loss_l_filtered = ngsfilter - l_filtered,
+    loss_relabeled = l_filtered - relabeled
+  ) %>%
+  pivot_longer(starts_with("loss_"), names_to = "stage", values_to = "read_loss") %>%
+  mutate(stage = factor(str_remove(stage, "loss_"), 
+                        levels = c("trim_merge", "ngsfilter", "l_filtered", "relabeled")))
+
+stage_loss_totals <- readcount_loss_abs %>%
+  group_by(stage) %>%
+  summarise(total_read_loss = sum(read_loss, na.rm = TRUE))
+
+pre3 <- ggplot(stage_loss_totals, aes(stage, total_read_loss, fill = stage)) +
+  geom_col() +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Total Read Loss per Preprocessing Stage", x = "Stage", y = "Total Read Loss")
+
+total_raw_reads <- sum(readcount$raw, na.rm = TRUE)
+stage_loss_percent <- stage_loss_totals %>%
+  mutate(percent_total_loss = total_read_loss / total_raw_reads * 100)
+
+pre3
+```
+
+\newpage
+
+```{r, fig.cap="PreFig 4: Percent read loss across samples after each preprocess step."}
+pre4 <- ggplot(stage_loss_percent, aes(stage, percent_total_loss, fill = stage)) +
+  geom_col() +
+  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+  labs(title = "Percent Total Read Loss per Preprocessing Stage", x = "Stage", y = "Percent Loss")
+
+pre4
+```
+
+\newpage
+
+```{r, fig.cap="PreFig 5: Average read length across samples after each preprocess step."}
+readL_step <- read_tsv("summary-readL_preprocess.tsv", show_col_types = FALSE)
+step_levels <- c("raw", "trim_merge", "ngsfilter", "length_filtered", "relabeled", "merged")
+
+ave_readL <- readL_step %>%
+  group_by(step) %>%
+  summarise(ave_read_l = round(mean(length, na.rm = TRUE), 0)) %>%
+  mutate(step = factor(step, levels = step_levels))
+
+pre5 <- ggplot(ave_readL, aes(step, ave_read_l, fill = step)) +
+  geom_col(width = 0.7) +
+  geom_text(aes(label = ave_read_l), vjust = -0.5, size = 3.5) +
+  labs(title = "Average Read Length Across Preprocessing Steps", x = "Step", y = "Average Read Length (bp)") +
+  ylim(0, max(ave_readL$ave_read_l) * 1.1)
+
+# Alignment Logic
+readalign <- read_tsv("summary-readalign_trim_merge.tsv", show_col_types = FALSE)
+total_val <- readalign %>% filter(read_type == "total") %>% pull(number)
+rounded_total <- round(total_val)
+components <- readalign %>% 
+  filter(read_type != "total") %>%
+  mutate(percent = round(number / rounded_total * 100, 1))
+
+custom_levels <- c("unaligned", "aligned_full-L_collapsed", "aligned_trunc_collapsed", "aligned_not-collapsed")
+components$read_type <- factor(components$read_type, levels = custom_levels)
+components <- components %>% arrange(read_type)
+legend_labels <- setNames(paste0(components$read_type, " (", components$percent, "%)"), components$read_type)
+
+pre5
+```
+
+\newpage
+
+```{r, fig.cap="PreFig 6: Relative percent of reads per trimming category in trim\\_merge"}
+pre6 <- ggplot(components, aes(x = 1, y = number, fill = read_type)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  coord_polar(theta="y") +
+  xlim(0.5, 1.5) +
+  theme_void() +
+  labs(title = "Read Alignment in trim_merge") +
+  annotate("text", x=0, y=0, label=paste0("Total Reads\n", format(rounded_total, big.mark=",")), size=4.5) +
+  scale_fill_discrete(labels = legend_labels) +
+  theme(legend.position = "right", legend.text = element_text(size = 9), plot.title = element_text(hjust = 0.5, face="bold"))
+
+pre6
+```
+
+\newpage
+```{r}
+n_stages <- length(unique(readcount_long$stage))
+fig_height <- n_stages * 2.5
+```
+```{r, fig.cap="PreFig 7: Number of reads remaining after each preprocess step.", fig.width=10, fig.height=length(unique(readcount_long$stage)) * 2.5}
+mean_reads <- readcount_long %>%
+  group_by(stage) %>%
+  summarise(mean_reads = mean(reads, na.rm = TRUE), 
+            label = scales::comma(round(mean_reads)))
+
+ggplot(readcount_long, aes(sample, reads)) +
+  geom_col(fill = "#2c7fb8") +
+  geom_hline(data = mean_reads, aes(yintercept = mean_reads), 
+             linetype="dashed", color="red", linewidth=0.6) +
+  geom_label(data = mean_reads, aes(x = 1, y = mean_reads, label = label), 
+             color="red", size=4, fill="white", hjust=0) +
+  facet_wrap(~stage, ncol = 1, scales="free_y") +
+  labs(title = "Read Counts per Sample by Preprocessing Stage", x = "Sample", y = "Read Count") +
+  theme(axis.text.x = element_text(angle = 90, size = 6))
+```
+
+\newpage
+
+```{r, fig.cap="PreFig 8: Percent of read loss after each preprocess step.", fig.width=10, fig.height=length(unique(readcount_long$stage)) * 2.5} 
+readcount_loss_long <- read_tsv("summary-readcount_preprocess.tsv", show_col_types = FALSE) %>%
+  select(sample, starts_with("%_loss_")) %>%
+  pivot_longer(-sample, names_to="stage", values_to="percent_loss") %>%
+  mutate(stage = factor(str_remove(stage, "%_loss_"), 
+                        levels=c("trim_merge", "ngsfilter", "l_filtered", "relabeled")))
+
+mean_loss <- readcount_loss_long %>%
+  group_by(stage) %>%
+  summarise(mean_loss = mean(percent_loss, na.rm = TRUE), 
+            label = paste0(round(mean_loss,1),"%"))
+
+ggplot(readcount_loss_long, aes(sample, percent_loss)) +
+  geom_col(fill="#d95f02") +
+  geom_hline(data=mean_loss, aes(yintercept=mean_loss), 
+             linetype="dashed", color="red", linewidth=0.6) +
+  geom_label(data=mean_loss, aes(x=1, y=mean_loss, label=label), 
+             color="red", size=4, fill="white", hjust=0) +
+  facet_wrap(~stage, ncol=1, scales="free_y") +
+  labs(title="Read Loss per Sample by Preprocessing Stage", x = "Sample", y = "Percent Read Loss") +
+  theme(axis.text.x = element_text(angle = 90, size = 6))
+```
+
+\newpage
+
+```{r, fig.cap="PreFig 9: Frequency of read lengths after each preprocess step. Dashed line shows the mean.", fig.width=10, fig.height=length(unique(readcount_long$stage)) * 2.5}
+summary_readL_step <- readL_step %>%
+  group_by(step) %>%
+  summarise(mean_length = mean(length))
+
+ggplot(readL_step, aes(length)) +
+  geom_histogram(binwidth = 5, fill="#2c7fb8", alpha=0.7) +
+  facet_wrap(~step, ncol=1, scales="free_y") +
+  geom_vline(data = summary_readL_step, aes(xintercept = mean_length), 
+             color="red", linetype="dashed", linewidth=0.8) +
+  labs(title="Read Length Distributions per Preprocessing Step", x="Read Length (bp)", y="Count") +
+  theme(strip.text = element_text(size = 11))
+```
