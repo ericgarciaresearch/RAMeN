@@ -831,9 +831,7 @@ This script creates the following output files:
 | summary-readcount_preprocess.tsv | Read counts and percent read loss at each preprocessing step |
 | summary-readL_preprocess.tsv | One row per read/sequence giving its length at each preprocessing step |
 
-*summary-readcount_preprocess.tsv* file that reports the number of reads remaining after each step is run as well as the percent of reads loss in each step relative to the previous
-
-If the read count worked ok the summary-readcount_preprocess.tsv file that looks like this:
+Check that these files are not empty and feel free to take a first glance at the performance of your dataset. For example,  `summary-readcount_preprocess.tsv` reports the number of reads remaining after each step is run as well as the percent of reads loss in each step relative to the previous:
 
 |sample | raw_F | raw_R | trim_merge  |  ngsfilter  |   l_filtered  |  relabeled  |   %_loss_trim_merge  |  %_loss_ngsfilter | %_loss_l_filtered  |   %_loss_relabeled| 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -842,16 +840,16 @@ If the read count worked ok the summary-readcount_preprocess.tsv file that looks
 |S040715_1  |   76527 | 76527 | 75781 | 75753 | 75753 | 75753 | 0.97 | 0.04 | 0.00 | 0.00| 
 |S040715_2  |   48762 | 48762 | 48407 | 48381 | 48381 | 48381 | 0.73 | 0.05 | 0.00 | 0.00|
 
-Review your table and look for read flags or disernable patterns. 
+Here, large read flags or other patterns can be discernible. Yet, RAMeN provides a script that automatically visualizes the read fate during preprocess
 
-* We will then visualize the read fate processing this tsv file with the R script **plot_preprocess_results.R**
+* the R script **plot_preprocess_results.R**
 
 &nbsp;
 &nbsp;
 
-**Ploting Read Summary**
+**Ploting Read Summaries**
 
-Now that the output of `check_dimer.sh` and `run_preprocess_summaries.sh` have been created, it is time to use R. Use the following custom Rscript and R markdown code to visualize plots and generate a report where you can easily determine if patterns exist.
+Now that the output of `check_dimer.sh` and `run_preprocess_summaries.sh` have been created, it is time to use R. Use RAMeN's custom Rscript and R markdown code to visualize plots and generate a report where you can easily determine if patterns exist.
 
 ```
 RAMeN/bin/plot_preprocess_results.R
@@ -884,7 +882,7 @@ Review the following reports:
 * FASTQC Reports
 * Preprocessing Report
 	
-These are the main parameters you might want to modify if you are losing a lot of data during preprocessing steps:
+These reports provide an ample review of how your dataset fared during the preprocessing filters. Use these to determine if parameter adjustment and subsequent runs are needed. These are the main parameters you might want to modify if you are losing a lot of data during preprocessing steps:
 
 
 ```
@@ -896,7 +894,7 @@ Higher values = stricter trimming.
 
 When to adjust:
 
-If you see many truncated collapsed reads, consider lowering slightly (e.g., 18–15).
+If you see many truncated collapsed reads ("aligned_truc_collapsed" in PreFig 6), consider lowering slightly (e.g., 18–15).
 
 Do not lower aggressively unless quality profiles support it (check FastQC).
 
@@ -907,7 +905,7 @@ Lower values allow shorter overlaps; higher values require stronger overlap evid
 
 When to adjust:
 
-If many reads are well aligned but not collapsing, try 8 or 6.
+If many reads are well aligned but not collapsing ("aligned_not-collapsed" in PreFig 6), try 8 or 6.
 
 Especially relevant for short amplicons or trimmed reads with reduced overlap.
 
