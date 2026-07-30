@@ -908,9 +908,9 @@ Higher values = stricter trimming.
 
 When to adjust:
 
-If you see many truncated collapsed reads ("aligned_truc_collapsed" in PreFig 6), consider lowering slightly (e.g., 18–15).
+* If you see many truncated collapsed reads ("aligned_truc_collapsed" in PreFig 6), consider lowering slightly (e.g., 18–15).
 
-Do not lower aggressively unless quality profiles support it (check FastQC).
+* Do not lower aggressively unless quality profiles support it (check FastQC).
 
 --min-align-len (default: 12)
 
@@ -919,9 +919,9 @@ Lower values allow shorter overlaps; higher values require stronger overlap evid
 
 When to adjust:
 
-If many reads are well aligned but not collapsing ("aligned_not-collapsed" in PreFig 6), try 8 or 6.
+* If many reads are well aligned but not collapsing ("aligned_not-collapsed" in PreFig 6), try 8 or 6.
 
-Especially relevant for short amplicons or trimmed reads with reduced overlap.
+* Especially relevant for short amplicons or trimmed reads with reduced overlap.
 
 --min-len (default: 50)
 
@@ -930,11 +930,11 @@ Reads shorter than this threshold are discarded.
 
 When to adjust:
 
-If you observe large losses at l_filtered.
+* If you observe large losses at l_filtered.
 
-If aggressive trimming shortens reads below expected amplicon size.
+* If aggressive trimming shortens reads below expected amplicon size.
 
-Lower cautiously (e.g., 40) and confirm biological plausibility.
+* Lower cautiously (e.g., 40) and confirm biological plausibility.
 
 --primer-mismatch (default: 2)
 
@@ -943,13 +943,13 @@ Higher values allow more variation in primer binding.
 
 When to adjust:
 
-If there is high data loss at ngsfilter.
+* If there is high data loss at ngsfilter.
 
-Try 3, especially for degenerate or variable markers (COI, 18S, ITS).
+* Try 3, especially for degenerate or variable markers (COI, 18S, ITS).
 
-and/or Try 4 for broad taxonomic amplification (COI, 18S).
+* and/or Try 4 for broad taxonomic amplification (COI, 18S).
 
-Avoid very high values to prevent off-target matches.
+* Avoid very high values to prevent off-target matches.
 ```
 --- 
 
