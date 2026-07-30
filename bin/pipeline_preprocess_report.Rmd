@@ -113,7 +113,11 @@ helper_data %>%
 dimer_data <- read_tsv("average_primer_dimer.tsv", show_col_types = FALSE)
 
 dimer_data %>%
-  kable(booktabs = TRUE, format = "latex") %>%
+  kable(
+    booktabs = TRUE,
+    format = "latex",
+    caption = "PreTable 1: Average read and primer dimer content across input files."
+  ) %>%
   kable_styling(latex_options = c("hold_position", "striped"))
 ```
 
