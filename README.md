@@ -896,7 +896,7 @@ Review the following reports:
 * FASTQC Reports
 * Preprocessing Report
 	
-These reports provide an ample review of how your dataset fared during the preprocessing filters. Use these to determine if parameter adjustment and subsequent runs are needed. These are the main parameters you might want to modify if you are losing a lot of data during preprocessing steps:
+These reports provide an ample review of how your dataset fared during the preprocessing filters. Use these to determine if preprocessing parameter adjustment and subsequent runs are needed. These are the main parameters you might want to modify if you are losing a lot of data during preprocessing steps:
 
 
 ```
@@ -1028,77 +1028,44 @@ output/taxonomy/lca/*/lca_taxonomy.tsv
 output/final/zotu_table_final_curated.tsv
 ```
 
-Open `plot_metabarcoding_results.R` and run the script locally
+**Open and run** `plot_metabarcoding_results.R` in your local computer.
+	
+* Click `yes` when prompted to restart R to update packages
 
-This will generate the following plots:
-* p1_reads_per_init-final_samples.png
-* p2_number_of_hits.png
-* p3_eval_before_after_filters.png
-* p4_pident_qcov.png
-* p5_number_of_zotus.png
-* p6_number_of_lca_drops.png
-* p7_final_taxonomic_diversity.png
-* p8_spread_taxonomic_diversity.png
-* p9_top10_species.png
-* p10_top10_genera.png
-* p11_top10_families.png
-* p12_top10_orders.png
-* p13_top10_classes.png
-* p14_top10_phyla.png
-* p15_read_count_bins_barplot.png
-* p16_read_count_bins_species_summed.png
-* p17_species_heatmap.png
-* p18_genus_heatmap.png
-* p19_family_heatmap.png
+This script will generate the following 19 plots (pgn) and the `Metabarcoding Report` (PDF)
+
+| Plot           | File name                                | Description                                                                                                                                                                                                                     |
+| -------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **MetaFig 1**  | `p1_reads_per_init-final_samples.png`    | **Read Counts for Initial and Final Samples.** Compares raw read count distributions between all initial samples and samples retained after processing using both linear- and log-scale boxplots, with sample counts annotated. |
+| **MetaFig 2**  | `p2_number_of_hits.png`                  | **Number of Hits per zOTU.** Compares the distribution of BLAST hits per zOTU before and after LCA filtering, illustrating how the filtering process affects the number of retained matches.                                    |
+| **MetaFig 3**  | `p3_eval_before_after_filters.png`       | **E-value Distribution of Sequence Hits.** Displays the distribution of BLAST e-values before and after LCA filtering, providing an assessment of match significance across retained hits.                                      |
+| **MetaFig 4**  | `p4_pident_qcov.png`                     | **Percent Identity and Query Coverage of Hits.** Compares the distributions of sequence identity and query coverage before and after LCA filtering, summarizing the quality of sequence matches.                                |
+| **MetaFig 5**  | `p5_number_of_zotus.png`                 | **Number of zOTUs Across Pipeline Stages.** Tracks the number of zOTUs remaining after each major analysis step, from the initial zOTU table through final curation.                                                            |
+| **MetaFig 6**  | `p6_number_of_lca_drops.png`             | **Ambiguous Taxonomic Assignments (LCA Drops).** Summarizes the number of ambiguous taxonomic assignments removed at each taxonomic rank during LCA-based classification.                                                       |
+| **MetaFig 7**  | `p7_final_taxonomic_diversity.png`       | **Final Taxonomic Diversity.** Shows the number of unique taxa recovered at each taxonomic rank in the final curated dataset, from domain to species.                                                                           |
+| **MetaFig 8**  | `p8_spread_taxonomic_diversity.png`      | **Spread of Taxonomic Diversity.** Uses boxplots to summarize how many child taxa occur within each parent taxonomic level (e.g., species per genus, genera per family), illustrating taxonomic richness and hierarchy.         |
+| **MetaFig 9**  | `p9_top10_species.png`                   | **Top 10 Most Abundant Species.** Displays the ten most frequently observed species in the curated dataset based on zOTU assignments.                                                                                           |
+| **MetaFig 10** | `p10_top10_genera.png`                   | **Top 10 Most Abundant Genera.** Shows the ten genera represented by the greatest number of zOTUs in the final dataset.                                                                                                         |
+| **MetaFig 11** | `p11_top10_families.png`                 | **Top 10 Most Abundant Families.** Ranks the ten most abundant families identified after taxonomic curation.                                                                                                                    |
+| **MetaFig 12** | `p12_top10_orders.png`                   | **Top 10 Most Abundant Orders.** Displays the ten orders with the highest number of assigned zOTUs.                                                                                                                             |
+| **MetaFig 13** | `p13_top10_classes.png`                  | **Top 10 Most Abundant Classes.** Shows the classes represented by the largest numbers of zOTUs in the final curated dataset.                                                                                                   |
+| **MetaFig 14** | `p14_top10_phyla.png`                    | **Top 10 Most Abundant Phyla.** Summarizes the most abundant phyla recovered across all samples after taxonomic assignment.                                                                                                     |
+| **MetaFig 15** | `p15_read_count_bins_barplot.png`        | **Distribution of Read Counts Across Samples.** Groups individual sample read counts into abundance bins, providing a quick overview of sequencing depth across all taxon-sample observations.                                  |
+| **MetaFig 16** | `p16_read_count_bins_species_summed.png` | **Distribution of Read Counts per Species.** Shows the distribution of read counts after summing reads across samples for each species, highlighting species-level abundance patterns.                                          |
+| **MetaFig 17** | `p17_species_heatmap.png`                | **Species Read Count Heatmap.** Visualizes binned read abundances for each species across all samples, making it easy to identify occurrence and abundance patterns.                                                            |
+| **MetaFig 18** | `p18_genus_heatmap.png`                  | **Genus Read Count Heatmap.** Displays binned read abundances for each genus across samples, providing a genus-level overview of community composition.                                                                         |
+| **MetaFig 19** | `p19_family_heatmap.png`                 | **Family Read Count Heatmap.** Shows the distribution of binned read counts for each family across samples, enabling rapid comparison of family-level abundance patterns.                                                       |
+
 
 **Review:**
+
+Review the following reports:
+
 * *Metabarcoding Report*
 
 Rerun with different parameters as needed or continue to the next step.
-
-```
-### Metabarcoding Results
-
-### READS & HITS
-
-| ![p1](analyses/blast_0_0_lca_70_70_1000hits_midori2/output/p1_reads_per_init-final_samples.png) | ![p2](analyses/blast_0_0_lca_70_70_1000hits_midori2/output/p2_number_of_hits.png) |
-| :--: | :--: |
-|Median and distribution of the number of reads (normal and log10 scales) before (Initial) and after preprocessing (Final). Final samples only consider indivials present at the final table: "zotu_table_final_curated.tsv" | Median and distribution of the number of hits per zOTU in the inital Blast and during the LCA process (LCA_intermediate) right before final selection of "best" hit |
-
-### Metrics
-
-| ![p3](analyses/blast_0_0_lca_70_70_1000hits_midori2/output/p3_eval_before_after_filters.png) | ![p4](analyses/blast_0_0_lca_70_70_1000hits_midori2/output/p4_pident_qcov.png) |
-| :--: | :--: |
-|Median and distribution of the Evalues of hits from inital Blast and during the LCA process (LCA_intermediate) right before final selection of "best" hit | Median and distribution of Percent Identity and Query Coverage of hits from inital Blast and during the LCA process (LCA_intermediate) right before final selection of "best" hit | 
-
-
-### zOTUs & Ambiguous Taxonomy
-
-| ![p5](analyses/blast_0_0_lca_70_70_1000hits_midori2/output/p5_number_of_zotus.png) |![p6](analyses/blast_0_0_lca_70_70_1000hits_midori2/output/p6_number_of_lca_drops.png) |
-| :--:|:--:|
-| Number of zOTUs per stage | Number hits that have two or more assigment labels with the same highest blast metrics, preventing the algorithm from picking the "best" label at a specific taxonomic level. This level gets an "LCA_dropped" classification and recieves a taxonomic label only at the Lowest Common Ancestor (LCA) or the level where all hits are in concordance | 
-
-### Diversity
-
-| ![p6](analyses/blast_0_0_lca_70_70_1000hits_midori2/output/p6_final_taxonomic_diversity.png) | ![p8](analyses/blast_0_0_lca_70_70_1000hits_midori2/output/p8_spread_taxonomic_diversity.png) |
-|:--:|:--:|
-| Number of unique species, genera, families, etc., across all samples and zOTUs. | Median and spread of invernal diversity within each taxonomic level |
-
- ### Community
- 
-|![p9](analyses/blast_0_0_lca_70_70_1000hits_midori2/output/p9_top10_species.png) |
-|:--:|
-|![p10](analyses/blast_0_0_lca_70_70_1000hits_midori2/output/p10_top10_genera.png) |
-|![p11](analyses/blast_0_0_lca_70_70_1000hits_midori2/output/p11_top10_families.png) |
-|![p12](analyses/blast_0_0_lca_70_70_1000hits_midori2/output/p12_top10_orders.png) |
-| Top 10 Most abundant species, genera, families and orders across samples and zOTUs |
-
-
-| ![p13](analyses/blast_0_0_lca_70_70_1000hits_midori2/output/p13_top10_classes.png) | ![p14](analyses/blast_0_0_lca_70_70_1000hits_midori2/output/p14_top10_phyla.png) |
-|:--:| :--:|
-| Most abundant classes across samples and zOTUs | Most abundant phyla across samples and zOTUs |
-```
-
+	
+This report provides a comprehensive review of both technical and biological aspects of the metabarcoding results. Use this report to determine if metabarcoding parameter adjustment and subsequent runs are needed. These are the main parameters you might want to modify if you would like to explore different parameter space:
 
 
 </p>
