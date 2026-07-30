@@ -90,7 +90,7 @@ The execution of rainbow_bridge requires `Nextflow` a containerized environment 
 
 We recommend giving every project a separate GitHub repository that can be treated a stand alone product. For example, for multi-marker projects, set up a separate repo for each marker and then an additional repo for the multi-marker analyses that will combine them.
 
-* Create a GitHub repo or *home_dir* for your project
+* Create a GitHub repo or home directory for your project. Here, this base directory will be referred as `home_dir`
 
 **Project Info**
 
@@ -100,6 +100,7 @@ Below is example project metadata that can be reported in your project but feel 
 
 From you project's home directiory, create project info file with:
 ```
+cd home_dir
 echo -e "Project Title\tUsing multi-marker eDNA metabarcoding to characterize pelagic ecosystem species composition in the Central North Pacific" > project_info.tsv
 echo -e "Cruise\t2022 Pacific Cruise (SE2204)" >> project_info.tsv
 echo -e "Location\tCental Pacific, multiple latitudes" >> project_info.tsv
@@ -559,6 +560,7 @@ You might use a few paramaters to name your subdirectories so that you can recog
 From your home_dir:
 ```
 mkdir analyses
+# mkdir analyses/run_dir  example:
 mkdir analyses/blast_90_90_00001_lca_97_97_1000hits_midori2
 cd analyses/blast_90_90_00001_lca_97_97_1000hits_midori2
 ```
@@ -985,7 +987,7 @@ Time to digest the main dish, the metabarcoding results :)
 
 Navigate to your run directory:
 ```
-cd project_dir/analysis/blast_90_90_00001_lca_97_97_1000hits_midori2
+cd home_dir/analysis/run_dir
 ```
 The metabarcoding results will be in the `output` directory. 
 
