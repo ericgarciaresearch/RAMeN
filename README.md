@@ -777,7 +777,7 @@ Briefly, `rainbow_bridge` will create 3 main subdirectories:
 </p>
 </details>
 
-<details><summary>QC and read fate in preprocess (*Preprocessing Report*)</summary>
+<details><summary>QC and read fate in preprocess (Preprocessing Report)</summary>
 <p>
 
 Is time to analyze your results!!! 
@@ -874,7 +874,7 @@ home_dir/analyses/run_dir/preprocess/summary-readL_preprocess.tsv
 	
 * Click `yes` when prompted to restart R to update packages
 
-This script will generate the following 9 plots (pgn) and the `Preprocessing Report` (PDF)
+This script will generate the following 9 plots (pgn) and the *Preprocessing Report* (PDF)
 
 | Plot         | File name                                    | Description                                                                                                                                                                                                                                                 |
 | ------------ | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -898,7 +898,7 @@ Review the following reports:
 	
 These reports provide an ample review of how your dataset fared during the preprocessing filters. Use these to determine if preprocessing parameter adjustment and subsequent runs are needed. These are the main parameters you might want to modify if you are losing a lot of data during preprocessing steps:
 
-
+Important Preprocessing Parameters
 ```
 --min-quality (default: 20)
 
