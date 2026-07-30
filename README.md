@@ -824,7 +824,7 @@ bash run_preprocess_summaries.sh
 
 This script creates the following output files:
 
-| Output file | | Description |
+| Output file | Description |
 | --- | --- |
 | summary-trim_merge.txt | AdapterRemoval settings and average trimming statistics across all samples |
 | summary-readalign_trim_merge.tsv | Simplified average read alignment summary from AdapterRemoval |
@@ -872,9 +872,9 @@ home_dir/analyses/run_dir/preprocess/summary-readL_preprocess.tsv
 
 **Open and run** `plot_preprocess_results.R` in your local computer.
 	
-	* Click `yes` when prompted to restart R to update packages
+* Click `yes` when prompted to restart R to update packages
 
-	* This script will generate 9 plots (pgn) and the `Preprocessing Report` (PDF)
+* This script will generate 9 plots (pgn) and the `Preprocessing Report` (PDF)
 
 
 **Review:**
