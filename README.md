@@ -939,13 +939,13 @@ Avoid very high values to prevent off-target matches.
 ```
 --- 
 
-Review your preprocess report as it will review the state of your data. You may use the following diagram to guide you in modifying parameters according to the step if which you are losing data:
+Review generated plots individually or conjunctly in your `pipeline_preprocess_report.pdf` as this will reveal the state of your data (pay special attention to PreFig 6). You may use the following diagram to guide you in modifying parameters according to the step if which you are losing data:
 
 ```mermaid
 flowchart TD
 
 
-A[Start. Review pipeline summary table.] --> B{Large data loss at trim_merge?}
+A[Start. Review reports and summary tables.] --> B{Large data loss at trim_merge?}
 
 B -- Yes --> C{Primer dimers approximately equal to unaligned reads?}
 
