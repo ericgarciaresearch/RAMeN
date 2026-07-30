@@ -996,26 +996,27 @@ The metabarcoding results will be in the `output` directory.
 
 **Analyse Metabarcoding Results**
 
-RAMeN includes a script that will automatically analyze the main metarbarcoding results.
+RAMeN includes a script that will automatically analyze and generate a report for the main metabarcoding results.
 ```
-RAMeN/bin/summarize_rainbow_output.R
+RAMeN/bin/plot_metabarcoding_results.R
 ````
 
-Make a copy of this script and the following `rainbow_bridge` output in the same directory:
+Make a copy of RAMeN's metabarcoding R code and the following `rainbow_bridge` output in the same local directory:
 ```
-RAMeN/bin/plot_rainbow_output.R
+RAMeN/bin/plot_metabarcoding_results.R
+RAMeN/bin/pipeline_metabarcoding_report.Rmd
+../../project_info.tsv
 preprocess/summary-readcount_preprocess.tsv
-output/zotus/zotu_table.tsv
 output/zotus/*zotus.fasta
+output/zotus/zotu_table.tsv
 output/lulu/lulu_zotu_table.tsv 
 output/blast/*/blast_result_merged.tsv 
 output/taxonomy/lca/*/lca_intermediate.tsv
 output/taxonomy/lca/*/lca_taxonomy.tsv 
 output/final/zotu_table_final_curated.tsv
-
 ```
 
-Open `summarize_rainbow_output.R` and run the script locally
+Open `plot_metabarcoding_results.R` and run the script locally
 
 This will generate the following plots:
 * p1_reads_per_init-final_samples.png
