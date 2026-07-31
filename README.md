@@ -1066,7 +1066,7 @@ Review the following reports:
 
 * *Metabarcoding Report*
 	
-This report provides a comprehensive review of both technical and biological aspects of the metabarcoding results. Use this report to determine if metabarcoding parameter adjustment and subsequent runs are needed. These are the main parameters you might want to modify if you would like to explore different parameter space:
+This report (*pipeline_metabarcoding_report.pdf*) provides a comprehensive review of both technical and biological aspects of the metabarcoding results. Use this report to determine if metabarcoding parameter adjustment and subsequent runs are needed. These are the main parameters you might want to modify if you would like to explore different parameter space:
 
 
 **Important Metabarcoding Parameters**
@@ -1103,7 +1103,7 @@ When to adjust:
 
 Increase if many taxa have numerous equally good BLAST matches.
 Particularly useful when using very large reference databases.
-Decrease only if runtime or memory becomes limiting.
+Decrease if runtime or memory becomes limiting.
 
 
 --percent-identity (default: 90)
@@ -1112,8 +1112,8 @@ Minimum BLAST percent identity required to retain a database hit.
 
 When to adjust:
 
-If many poor-quality matches are retained, increase to 95–97.
 Keep relatively lenient or the default when using the Regional-Remix Module for downstream refinement.
+Increase to 95–100, If many poor-quality matches are retained or Regional-Remix is not being used.
 
 
 --qcov (default: 90)
@@ -1122,7 +1122,7 @@ Minimum query coverage required for BLAST hits.
 
 When to adjust:
 
-Increase to 95 when working with well-curated reference databases and high-quality reads.
+Increase to 95-100 when working with well-curated reference databases and high-quality reads or Regional-Remix is not being used.
 Avoid very low values since partial alignments become common.
 
 
@@ -1143,7 +1143,7 @@ Minimum percent identity retained during LCA taxonomic assignment.
 
 When to adjust:
 
-Increase when confident reference databases are available and conservative assignments are preferred.
+Increase to 95-100, when confident reference databases are available and conservative assignments are preferred.
 
 
 --lca-qcov (default: 90)
@@ -1165,6 +1165,7 @@ Smaller values require nearly identical hits to contribute to the LCA, while lar
 When to adjust:
 
 Keep low when conservative taxonomic assignments are desired.
+Test increasing if too many "LCA_dropped" assignments are observe.
 Increasing too much may reduce taxonomic resolution.
 ```
 
