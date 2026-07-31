@@ -473,8 +473,8 @@ p9  <- get_top10_plot(final, "species", "Top 10 Most Abundant Species")
 p10 <- get_top10_plot(final, "genus",   "Top 10 Most Abundant Genera")
 p11 <- get_top10_plot(final, "family",  "Top 10 Most Abundant Families")
 p12 <- get_top10_plot(final, "order",   "Top 10 Most Abundant Orders")
-#p13 <- get_top10_plot(final, "class",   "Top Most Abundant Classes")
-#p14 <- get_top10_plot(final, "phylum",  "Top Most Abundant Phyla")
+#p12c <- get_top10_plot(final, "class",   "Top Most Abundant Classes")
+#p12p <- get_top10_plot(final, "phylum",  "Top Most Abundant Phyla")
 
 # For p13 – Top Most Abundant Classes
 top_taxa_13 <- final %>%
