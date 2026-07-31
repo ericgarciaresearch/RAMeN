@@ -872,7 +872,7 @@ home_dir/analyses/run_dir/preprocess/summary-readL_preprocess.tsv
 
 **Open and run** `plot_preprocess_results.R` in your local computer.
 	
-* Click `yes` when prompted to restart R to update packages
+* Click `yes` when prompted to restart R to update packages the first time. If prompted again, click `no`. 
 
 This script will generate the following 9 plots (pgn) and the *Preprocessing Report* (PDF)
 
@@ -1033,7 +1033,7 @@ output/final/zotu_table_final_curated.tsv
 
 **Open and run** `plot_metabarcoding_results.R` in your local computer.
 	
-* Click `yes` when prompted to restart R to update packages
+* Click `yes` when prompted to restart R to update packages the first time. If prompted again, click `no`. 
 
 This script will generate the following 19 plots (pgn) and the `Metabarcoding Report` (PDF)
 
