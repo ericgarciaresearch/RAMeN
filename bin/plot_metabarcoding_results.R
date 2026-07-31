@@ -582,7 +582,7 @@ p15 <- ggplot(bin_counts, aes(x = Bin, y = Count)) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.15))) + # Adds 15% empty space to the top 
   ylab("Frequency") +
   xlab("Read Count Bin") +
-  ggtitle("Distribution of Read Counts Across Samples") +
+  ggtitle("Distribution of Read Counts per zOTU–Sample Observation") +
   theme_minimal(base_size = 13) +
   theme(axis.text.x = element_text(size = 11))
 

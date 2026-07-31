@@ -214,7 +214,7 @@ knitr::include_graphics("p14_top10_phyla.png")
 
 # Read Distribution
 
-```{r, fig.cap="MetaFig 15: Distribution of read counts across samples"}
+```{r, fig.cap="MetaFig 15: Distribution of read counts per zOTU–sample observation"}
 knitr::include_graphics("p15_read_count_bins_barplot.png")
 ```
 
