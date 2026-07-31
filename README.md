@@ -956,7 +956,7 @@ Avoid very high values to prevent off-target matches.
 ```
 --- 
 
-Review generated plots individually or conjunctly in your `pipeline_preprocess_report.pdf` as this will reveal the state of your data (pay special attention to PreFig 6). You may use the following diagram to guide you in modifying parameters according to the step if which you are losing data:
+Review generated plots individually or conjunctly in your `pipeline_preprocess_report.pdf` as this will reveal the state of your data (pay special attention to PreFig 6). You may use the following diagram to guide you in modifying preprocessing parameters according to the step if which you are losing data:
 
 ```mermaid
 flowchart TD
@@ -1068,7 +1068,6 @@ Review the following reports:
 	
 This report provides a comprehensive review of both technical and biological aspects of the metabarcoding results. Use this report to determine if metabarcoding parameter adjustment and subsequent runs are needed. These are the main parameters you might want to modify if you would like to explore different parameter space:
 
-Once you are satisfy with your run, move into the next step.
 
 **Important Metabarcoding Parameters**
 ```
@@ -1080,19 +1079,22 @@ Lower values retain more sequence variants.
 
 When to adjust:
 
-If you recover an unusually large number of low-abundance zOTUs (MetaFig 5), consider increasing to 3–5.
+If you recover an unusually large number of low-abundance zOTUs, consider increasing to 3–5.
 For COI, 5 has been recommended (Antich et al. 2021) and generally performs well.
 For most other markers (16S, 12S, 18S, ITS), 2 is usually appropriate.
+
+
 --zotu-identity (default: 1)
 
 Minimum identity required when clustering exact sequence variants into zOTUs.
-The default (1) retains exact sequence variants only.
+The default (1) retains exact sequence variants only (ESV/ASV).
 
 When to adjust:
 
-Rarely needs modification.
-Only consider lowering if biological justification exists for merging extremely similar sequence variants.
+Only consider lowering if OTUs are desired or if biological justification exists for merging extremely similar sequence variants.
 For most metabarcoding studies, retain the default.
+
+
 --max-query-results (default: 1000)
 
 Maximum number of BLAST hits retained for each zOTU before LCA assignment.
@@ -1102,24 +1104,28 @@ When to adjust:
 Increase if many taxa have numerous equally good BLAST matches.
 Particularly useful when using very large reference databases.
 Decrease only if runtime or memory becomes limiting.
+
+
 --percent-identity (default: 90)
 
 Minimum BLAST percent identity required to retain a database hit.
 
 When to adjust:
 
-If too few BLAST hits survive initial filtering (MetaFig 2), consider lowering slightly (e.g., 85).
 If many poor-quality matches are retained, increase to 95–97.
-Keep relatively lenient when using the Regional-Remix Module for downstream refinement.
+Keep relatively lenient or the default when using the Regional-Remix Module for downstream refinement.
+
+
 --qcov (default: 90)
 
 Minimum query coverage required for BLAST hits.
 
 When to adjust:
 
-If many biologically plausible hits are being discarded (MetaFig 4), test 80–85.
 Increase to 95 when working with well-curated reference databases and high-quality reads.
 Avoid very low values since partial alignments become common.
+
+
 --evalue (default: 0.001)
 
 Maximum BLAST E-value accepted for downstream analysis.
@@ -1129,14 +1135,17 @@ When to adjust:
 Lower (e.g., 1e-5 or 1e-10) for more stringent matching.
 Increase slightly only if expected taxa are poorly represented in the reference database.
 Rarely requires adjustment when identity and query coverage thresholds are already applied.
+
+
 --lca-pid (default: 90)
 
 Minimum percent identity retained during LCA taxonomic assignment.
 
 When to adjust:
 
-If many assignments become LCA_dropped (MetaFig 6), consider lowering to 85.
 Increase when confident reference databases are available and conservative assignments are preferred.
+
+
 --lca-qcov (default: 90)
 
 Minimum query coverage used during LCA assignment.
@@ -1145,6 +1154,8 @@ When to adjust:
 
 Lower slightly if numerous partial but biologically meaningful matches are excluded.
 Increase when prioritizing highly complete alignments.
+
+
 --lca-diff (default: 1)
 
 Maximum allowed difference in percent identity between competing BLAST hits included in the Lowest Common Ancestor calculation.
@@ -1153,10 +1164,37 @@ Smaller values require nearly identical hits to contribute to the LCA, while lar
 
 When to adjust:
 
-If many taxa become LCA_dropped (MetaFig 6), consider increasing to 2–3.
 Keep low when conservative taxonomic assignments are desired.
 Increasing too much may reduce taxonomic resolution.
 ```
+
+**Parameter philosophy**: The RAMeN workflow intentionally uses relatively permissive BLAST and LCA thresholds to maximize taxonomic recovery during the Metabarcoding Module. Candidate assignments are subsequently evaluated and refined in the Regional-Remix Module, allowing potentially informative matches to be retained initially rather than discarded prematurely. This strategy is particularly beneficial when reference databases are incomplete or when working with poorly represented taxa.
+
+After reviewing the `pipeline_metabarcoding_report.pdf` you may use the following diagram to guide you in modifying parameters according patterns in metabarcoding results:
+
+```mermaid
+flowchart TD
+
+A[Start. Review Metabarcoding Report] --> B{Very few BLAST hits retained?<br/>MetaFig 2}
+
+B -- Yes --> C[Lower percent-identity to 85 and/or qcov to 80-85]
+
+B -- No --> D{Poor BLAST quality?<br/>MetaFig 3-4}
+
+D -- Yes --> E[Increase percent-identity to 95-97 and/or qcov to 95]
+
+D -- No --> F{Many zOTUs?<br/>MetaFig 5}
+
+F -- Yes --> G[Increase alpha to 3-5<br/>COI commonly uses alpha=5]
+
+F -- No --> H{Many LCA_dropped assignments?<br/>MetaFig 6}
+
+H -- Yes --> I[Test lca-pid 85 or increase lca-diff to 2-3]
+
+H -- No --> J[Pipeline behaving as expected.]
+```
+
+Once you are satisfy with your run, move into the next step.
 
 </p>
 </details>
