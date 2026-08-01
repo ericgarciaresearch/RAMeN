@@ -1171,30 +1171,6 @@ Increasing too much may reduce taxonomic resolution.
 
 **Parameter philosophy**: The RAMeN workflow intentionally uses relatively permissive BLAST and LCA thresholds to maximize taxonomic recovery during the Metabarcoding Module. Candidate assignments are subsequently evaluated and refined in the Regional-Remix Module, allowing potentially informative matches to be retained initially rather than discarded prematurely. This strategy is particularly beneficial when reference databases are incomplete or when working with poorly represented taxa.
 
-After reviewing the `pipeline_metabarcoding_report.pdf` you may use the following diagram to guide you in modifying parameters according patterns in metabarcoding results:
-
-```mermaid
-flowchart TD
-
-A[Start. Review Metabarcoding Report] --> B{Very few BLAST hits retained?<br/>MetaFig 2}
-
-B -- Yes --> C[Lower percent-identity to 85 and/or qcov to 80-85]
-
-B -- No --> D{Poor BLAST quality?<br/>MetaFig 3-4}
-
-D -- Yes --> E[Increase percent-identity to 95-97 and/or qcov to 95]
-
-D -- No --> F{Many zOTUs?<br/>MetaFig 5}
-
-F -- Yes --> G[Increase alpha to 3-5<br/>COI commonly uses alpha=5]
-
-F -- No --> H{Many LCA_dropped assignments?<br/>MetaFig 6}
-
-H -- Yes --> I[Test lca-pid 85 or increase lca-diff to 2-3]
-
-H -- No --> J[Pipeline behaving as expected.]
-```
-
 Once you are satisfy with your run, move into the next step.
 
 </p>
@@ -1205,7 +1181,7 @@ Once you are satisfy with your run, move into the next step.
 <details><summary>Create input for next module</summary>
 <p>
 
-zOTUs (Hereinafter referred to as ASVs) found by `rainbow_bridge` can be matched against a database curated from certain errors like MIDORI2, but mislabelling, taxonomic inconsistencies might prevail. The next module disentangles this discrepancies and validates the regional presence of species and flags foreign taxa.
+zOTUs (Hereinafter referred to as ASVs) found by `rainbow_bridge` might contain mislabelling and taxonomic inconsistencies even when matched against curated databases like MIDORI2. The next module disentangles some of these discrepancies by applying more stringent filters and validating the regional presence of species while flagging foreign taxa.
 
 ### Regional Remix
 
