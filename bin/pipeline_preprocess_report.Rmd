@@ -56,6 +56,8 @@ Report generated on `r format(Sys.Date(), '%B %d, %Y')`.<br>
   # Project Info
   
 ```{r}
+if (file.exists("project_info.tsv")) {
+
 project_info <- read_tsv("project_info.tsv", show_col_types = FALSE)
 
 project_info %>%
@@ -70,6 +72,12 @@ project_info %>%
   ) %>%
   column_spec(1, width = "6cm") %>%
   column_spec(2, width = "8cm")
+  
+} else {
+
+  cat("Project Info not available (project_info.tsv not found)")
+
+}
 ```
 
 ---
@@ -110,15 +118,24 @@ helper_data %>%
   
   # Estimated Dimer Content Across Files
 ```{r}
-dimer_data <- read_tsv("average_primer_dimer.tsv", show_col_types = FALSE)
+if (file.exists("average_primer_dimer.tsv")) {
 
-dimer_data %>%
-  kable(
-    booktabs = TRUE,
-    format = "latex",
-    caption = "PreTable 1: Average read and primer dimer content across input files."
-  ) %>%
-  kable_styling(latex_options = c("hold_position", "striped"))
+  dimer_data <- read_tsv("average_primer_dimer.tsv",
+                         show_col_types = FALSE)
+
+  dimer_data %>%
+    kable(
+      booktabs = TRUE,
+      format = "latex",
+      caption = "PreTable 1: Average read and primer dimer content across input files."
+    ) %>%
+    kable_styling(latex_options = c("hold_position", "striped"))
+
+} else {
+
+  cat("Primer dimer summary not available (average_primer_dimer.tsv not found)")
+
+}
 ```
 
   ---
